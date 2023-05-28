@@ -24,9 +24,11 @@ public class TrashPickerBehaviour : MonoBehaviour
     private float gridSpacing = 3f;
 
     [SerializeField] private CellView cellPrefab;
+    [SerializeField] private GameObject robotPrefab;
 
     private TrashPickerGame game;
     private CellView[,] cellObjects;
+    private GameObject robot;
 
     private void Start()
     {
@@ -42,19 +44,21 @@ public class TrashPickerBehaviour : MonoBehaviour
                 CellView cellObject = Instantiate(cellPrefab, transform);
 
                 cellObject.name = $"CellObject({i}, {j})";
-                cellObject.transform.position = CellToWorldPosition(i, j);
+                cellObject.transform.position = CellToWorldPosition(new Position(i, j));
 
                 cellObjects[i, j] = cellObject;
             }
         }
 
+        robot = Instantiate(robotPrefab);
+
         UpdateView();
     }
 
-    private Vector3 CellToWorldPosition(int row, int col)
+    private Vector3 CellToWorldPosition(Position pos)
     {
-        Vector3 position = new Vector3(col * gridSpacing, 0,
-            -(row * gridSpacing));
+        Vector3 position = new Vector3(pos.Col * gridSpacing, 0,
+            -(pos.Row * gridSpacing));
 
         // Offset to center
         float rowLength = gridSpacing * (game.Cols - 1);
@@ -73,5 +77,7 @@ public class TrashPickerBehaviour : MonoBehaviour
                 cellObjects[i, j].SetState(game.CellAt(new Position(i, j)));
             }
         }
+
+        robot.transform.position = CellToWorldPosition(game.RobotPosition);
     }
 }
