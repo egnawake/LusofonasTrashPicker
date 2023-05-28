@@ -51,6 +51,8 @@ public class TrashPickerBehaviour : MonoBehaviour
         }
 
         robot = Instantiate(robotPrefab);
+        robot.transform.position = CellToWorldPosition(new Position(0, 0));
+        robot.transform.rotation = Quaternion.LookRotation(-Vector3.forward);
 
         UpdateView();
     }
