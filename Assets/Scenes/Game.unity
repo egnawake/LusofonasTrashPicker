@@ -293,14 +293,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.5050546, y: -0, z: -0, w: 0.8630874}
-  m_LocalPosition: {x: 0, y: 4.97, z: -3.58}
+  m_LocalRotation: {x: 0.5821016, y: 0, z: 0, w: 0.813116}
+  m_LocalPosition: {x: 0, y: 7, z: -2.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 60.67, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 71.197, y: 0, z: 0}
 --- !u!1 &1097863824
 GameObject:
   m_ObjectHideFlags: 0
@@ -335,6 +335,40 @@ MonoBehaviour:
   maxTurns: 10000
   trashSpawnChance: 0.4000000059604645
   gridSpacing: 1.2
+  robotMoveTime: 0.5
+  robotMoveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.5965486
+      outSlope: 3.5965486
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.07824907
+    - serializedVersion: 3
+      time: 0.5714453
+      value: 1.0456935
+      inSlope: 0.12917706
+      outSlope: 0.12917706
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.23375367
+      outWeight: 0.46525687
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.25544885
+      outSlope: -0.25544885
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.46668485
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   cellPrefab: {fileID: 8331667419815577991, guid: 33de107dfcce4844ca7502c922ffc0ac, type: 3}
   robotPrefab: {fileID: 8331126558588716320, guid: d067675213b13af4cbc050ede83d07d1, type: 3}
 --- !u!4 &1097863826

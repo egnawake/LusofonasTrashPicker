@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class TrashPickerBehaviour : MonoBehaviour
 {
@@ -23,12 +24,16 @@ public class TrashPickerBehaviour : MonoBehaviour
     [Tooltip("Distance between cell objects.")]
     private float gridSpacing = 3f;
 
+    [SerializeField] private float robotMoveTime = 0.5f;
+    [SerializeField] private AnimationCurve robotMoveCurve;
+
     [SerializeField] private CellView cellPrefab;
     [SerializeField] private GameObject robotPrefab;
 
     private TrashPickerGame game;
     private CellView[,] cellObjects;
     private GameObject robot;
+    private bool animating = false;
 
     private void Start()
     {
@@ -59,7 +64,8 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     private void Update()
     {
-        DoAction();
+        if (!animating)
+            DoAction();
     }
 
     private void DoAction()
@@ -116,6 +122,7 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     private void UpdateView()
     {
+        // Update cell states
         for (int i = 0; i < game.Rows; i++)
         {
             for (int j = 0; j < game.Cols; j++)
@@ -124,12 +131,31 @@ public class TrashPickerBehaviour : MonoBehaviour
             }
         }
 
-        Vector3 prevPos = robot.transform.position;
-        robot.transform.position = CellToWorldPosition(game.RobotPosition);
-        Vector3 forward = robot.transform.position - prevPos;
-        if (forward.magnitude > 0)
+        // Update robot position and rotation
+        Vector3 currentPos = robot.transform.position;
+        Vector3 targetPos = CellToWorldPosition(game.RobotPosition);
+        Vector3 disp = targetPos - currentPos;
+        if (disp.magnitude > 0.001f)
         {
-            robot.transform.rotation = Quaternion.LookRotation(forward);
+            robot.transform.rotation = Quaternion.LookRotation(disp);
+            StartCoroutine(AnimateRobot(currentPos, targetPos));
         }
+    }
+
+    private IEnumerator AnimateRobot(Vector3 start, Vector3 end)
+    {
+        animating = true;
+
+        float timer = 0;
+
+        while (timer < robotMoveTime)
+        {
+            float pct = robotMoveCurve.Evaluate(timer / robotMoveTime);
+            robot.transform.position = Vector3.LerpUnclamped(start, end, pct);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        animating = false;
     }
 }
