@@ -23,33 +23,35 @@ public class TrashPickerBehaviour : MonoBehaviour
     [Tooltip("Distance between cell objects.")]
     private float gridSpacing = 3f;
 
-    [SerializeField] private GameObject cellObjectPrefab;
+    [SerializeField] private CellView cellPrefab;
 
     private TrashPickerGame game;
-    private GameObject[,] cellObjects;
+    private CellView[,] cellObjects;
 
     private void Start()
     {
         // Instantiate game
         game = new TrashPickerGame(rows, cols, maxTurns, trashSpawnChance);
 
-        cellObjects = new GameObject[rows, cols];
+        cellObjects = new CellView[rows, cols];
 
         for (int i = 0; i < game.Rows; i++)
         {
             for (int j = 0; j < game.Cols; j++)
             {
-                GameObject cellObject = Instantiate(cellObjectPrefab, transform);
+                CellView cellObject = Instantiate(cellPrefab, transform);
 
                 cellObject.name = $"CellObject({i}, {j})";
-                cellObject.transform.position = PositionCellObject(i, j);
+                cellObject.transform.position = CellToWorldPosition(i, j);
 
                 cellObjects[i, j] = cellObject;
             }
         }
+
+        UpdateView();
     }
 
-    private Vector3 PositionCellObject(int row, int col)
+    private Vector3 CellToWorldPosition(int row, int col)
     {
         Vector3 position = new Vector3(col * gridSpacing, 0,
             -(row * gridSpacing));
@@ -60,5 +62,16 @@ public class TrashPickerBehaviour : MonoBehaviour
         Vector3 offset = new Vector3(-rowLength / 2, 0, colLength / 2);
 
         return position + offset;
+    }
+
+    private void UpdateView()
+    {
+        for (int i = 0; i < game.Rows; i++)
+        {
+            for (int j = 0; j < game.Cols; j++)
+            {
+                cellObjects[i, j].SetState(game.CellAt(new Position(i, j)));
+            }
+        }
     }
 }
