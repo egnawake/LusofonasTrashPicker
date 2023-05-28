@@ -55,6 +55,50 @@ public class TrashPickerBehaviour : MonoBehaviour
         UpdateView();
     }
 
+    private void Update()
+    {
+        DoAction();
+    }
+
+    private void DoAction()
+    {
+        if (Input.GetButtonDown("Skip Turn"))
+        {
+            game.SkipTurn();
+            UpdateView();
+        }
+        else if (Input.GetButtonDown("Collect"))
+        {
+            game.CollectTrash();
+            UpdateView();
+        }
+        else if (Input.GetButtonDown("Up"))
+        {
+            game.MoveRobot(Direction.North);
+            UpdateView();
+        }
+        else if (Input.GetButtonDown("Right"))
+        {
+            game.MoveRobot(Direction.East);
+            UpdateView();
+        }
+        else if (Input.GetButtonDown("Down"))
+        {
+            game.MoveRobot(Direction.South);
+            UpdateView();
+        }
+        else if (Input.GetButtonDown("Left"))
+        {
+            game.MoveRobot(Direction.West);
+            UpdateView();
+        }
+        else if (Input.GetButtonDown("Move Random"))
+        {
+            game.MoveRobot((Direction)Random.Range(0, 4));
+            UpdateView();
+        }
+    }
+
     private Vector3 CellToWorldPosition(Position pos)
     {
         Vector3 position = new Vector3(pos.Col * gridSpacing, 0,
@@ -78,6 +122,12 @@ public class TrashPickerBehaviour : MonoBehaviour
             }
         }
 
+        Vector3 prevPos = robot.transform.position;
         robot.transform.position = CellToWorldPosition(game.RobotPosition);
+        Vector3 forward = robot.transform.position - prevPos;
+        if (forward.magnitude > 0)
+        {
+            robot.transform.rotation = Quaternion.LookRotation(forward);
+        }
     }
 }
