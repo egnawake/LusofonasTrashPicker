@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 
 public class TrashPickerGame
 {
     private readonly int maxSteps;
-    private readonly CellState[,] grid;
+    private readonly InternalCellState[,] grid;
     private readonly Random rng;
 
     private Position robotPosition = new Position(0, 0);
@@ -34,13 +35,13 @@ public class TrashPickerGame
     {
         rng = new Random();
 
-        grid = new CellState[rows, cols];
+        grid = new InternalCellState[rows, cols];
         for (int r = 0; r < grid.GetLength(0); r++)
         {
             for (int c = 0; c < grid.GetLength(1); c++)
             {
                 grid[r, c] = rng.NextDouble() < trashSpawnChance
-                    ? CellState.Trash : CellState.Empty;
+                    ? InternalCellState.Trash : InternalCellState.Empty;
             }
         }
 
@@ -49,7 +50,14 @@ public class TrashPickerGame
 
     public CellState CellAt(Position pos)
     {
-        return grid[pos.Row, pos.Col];
+        if (IsCellVisible(pos))
+        {
+            return (CellState)grid[pos.Row, pos.Col];
+        }
+        else
+        {
+            return CellState.Hidden;
+        }
     }
 
     public bool MoveRobot(Direction dir)
@@ -68,8 +76,7 @@ public class TrashPickerGame
             _ => throw new ArgumentException("Invalid direction")
         };
 
-        if (targetPos.Row < 0 || targetPos.Row >= grid.GetLength(0)
-            || targetPos.Col < 0 || targetPos.Col >= grid.GetLength(1))
+        if (IsPositionIllegal(targetPos))
         {
             score -= 5;
             return false;
@@ -94,19 +101,44 @@ public class TrashPickerGame
 
         step++;
 
-        if (CellAt(robotPosition) != CellState.Trash)
+        if (grid[robotPosition.Row, robotPosition.Col] != InternalCellState.Trash)
         {
             score -= 1;
             return false;
         }
 
-        SetCell(robotPosition, CellState.Empty);
+        SetCell(robotPosition, InternalCellState.Empty);
         score += 10;
         return true;
     }
 
-    private void SetCell(Position pos, CellState state)
+    private void SetCell(Position pos, InternalCellState state)
     {
         grid[pos.Row, pos.Col] = state;
+    }
+
+    private bool IsPositionIllegal(Position p)
+    {
+        return p.Row < 0 || p.Row >= grid.GetLength(0) || p.Col < 0
+            || p.Col >= grid.GetLength(1);
+    }
+
+    private bool IsCellVisible(Position pos)
+    {
+        IList<Position> neighborhood = new List<Position>
+        {
+            robotPosition,
+            robotPosition + new Position(-1, 0),
+            robotPosition + new Position(0, 1),
+            robotPosition + new Position(1, 0),
+            robotPosition + new Position(0, -1)
+        };
+
+        foreach (Position p in neighborhood)
+        {
+            if (pos == p) return true;
+        }
+
+        return false;
     }
 }

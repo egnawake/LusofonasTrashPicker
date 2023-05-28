@@ -17,5 +17,7 @@ public class CellView : MonoBehaviour
 
         if (state == CellState.Trash)
             placedObject = Instantiate(trashPrefab, transform);
+        else if (state == CellState.Hidden)
+            placedObject = Instantiate(fogPrefab, transform);
     }
 }

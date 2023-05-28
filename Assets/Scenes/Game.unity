@@ -332,7 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rows: 5
   cols: 5
-  maxTurns: 20
+  maxTurns: 10000
   trashSpawnChance: 0.4000000059604645
   gridSpacing: 1.2
   cellPrefab: {fileID: 8331667419815577991, guid: 33de107dfcce4844ca7502c922ffc0ac, type: 3}
