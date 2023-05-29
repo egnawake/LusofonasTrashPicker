@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class TrashPickerGame
 {
-    private readonly int maxSteps;
+    private readonly int maxTurns;
     private readonly InternalCellState[,] grid;
     private readonly Random rng;
 
     private Position robotPosition = new Position(0, 0);
-    private int step = 0;
+    private int turn = 0;
     private int score = 0;
 
     // TODO: maybe make an enumerator for this class?
@@ -17,21 +17,21 @@ public class TrashPickerGame
 
     public int Score => score;
 
-    public int Step
+    public int Turn
     {
-        get => step;
+        get => turn;
         private set
         {
-            step = value;
+            turn = value;
         }
     }
-    public int MaxSteps => maxSteps;
+    public int MaxTurns => maxTurns;
 
     public Position RobotPosition => robotPosition;
 
-    public bool GameOver => step >= maxSteps;
+    public bool GameOver => turn >= maxTurns;
 
-    public TrashPickerGame(int rows, int cols, int maxSteps, double trashSpawnChance)
+    public TrashPickerGame(int rows, int cols, int maxTurns, double trashSpawnChance)
     {
         rng = new Random();
 
@@ -45,7 +45,7 @@ public class TrashPickerGame
             }
         }
 
-        this.maxSteps = maxSteps;
+        this.maxTurns = maxTurns;
     }
 
     public CellState CellAt(Position pos)
@@ -65,7 +65,7 @@ public class TrashPickerGame
         if (GameOver)
             return false;
 
-        step++;
+        turn++;
 
         Position targetPos = robotPosition + dir switch
         {
@@ -91,7 +91,7 @@ public class TrashPickerGame
         if (GameOver)
             return;
 
-        step++;
+        turn++;
     }
 
     public bool CollectTrash()
@@ -99,7 +99,7 @@ public class TrashPickerGame
         if (GameOver)
             return false;
 
-        step++;
+        turn++;
 
         if (grid[robotPosition.Row, robotPosition.Col] != InternalCellState.Trash)
         {

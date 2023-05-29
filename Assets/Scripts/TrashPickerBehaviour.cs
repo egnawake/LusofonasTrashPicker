@@ -36,6 +36,13 @@ public class TrashPickerBehaviour : MonoBehaviour
     private GameObject robot;
     private bool animating = false;
 
+    public ActionEvent OnAction => onAction;
+
+    private void Awake()
+    {
+        onAction = new ActionEvent();
+    }
+
     private void Start()
     {
         // Instantiate game
@@ -75,6 +82,7 @@ public class TrashPickerBehaviour : MonoBehaviour
         {
             game.SkipTurn();
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
         else if (Input.GetButtonDown("Collect"))
         {
@@ -86,31 +94,37 @@ public class TrashPickerBehaviour : MonoBehaviour
                     Quaternion.identity);
             }
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
         else if (Input.GetButtonDown("Up"))
         {
             game.MoveRobot(Direction.North);
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
         else if (Input.GetButtonDown("Right"))
         {
             game.MoveRobot(Direction.East);
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
         else if (Input.GetButtonDown("Down"))
         {
             game.MoveRobot(Direction.South);
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
         else if (Input.GetButtonDown("Left"))
         {
             game.MoveRobot(Direction.West);
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
         else if (Input.GetButtonDown("Move Random"))
         {
             game.MoveRobot((Direction)Random.Range(0, 4));
             UpdateView();
+            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
     }
 
@@ -165,4 +179,6 @@ public class TrashPickerBehaviour : MonoBehaviour
 
         animating = false;
     }
+
+    private ActionEvent onAction;
 }
