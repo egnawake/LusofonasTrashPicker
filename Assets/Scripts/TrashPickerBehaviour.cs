@@ -29,6 +29,7 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     [SerializeField] private CellView cellPrefab;
     [SerializeField] private GameObject robotPrefab;
+    [SerializeField] private GameObject trashPickupEffectPrefab;
 
     private TrashPickerGame game;
     private CellView[,] cellObjects;
@@ -77,7 +78,13 @@ public class TrashPickerBehaviour : MonoBehaviour
         }
         else if (Input.GetButtonDown("Collect"))
         {
-            game.CollectTrash();
+            bool collected = game.CollectTrash();
+            if (collected)
+            {
+                Instantiate(trashPickupEffectPrefab,
+                    CellToWorldPosition(game.RobotPosition),
+                    Quaternion.identity);
+            }
             UpdateView();
         }
         else if (Input.GetButtonDown("Up"))
@@ -135,7 +142,7 @@ public class TrashPickerBehaviour : MonoBehaviour
         Vector3 currentPos = robot.transform.position;
         Vector3 targetPos = CellToWorldPosition(game.RobotPosition);
         Vector3 disp = targetPos - currentPos;
-        if (disp.magnitude > 0.001f)
+        if (disp.magnitude > 0.01f)
         {
             robot.transform.rotation = Quaternion.LookRotation(disp);
             StartCoroutine(AnimateRobot(currentPos, targetPos));

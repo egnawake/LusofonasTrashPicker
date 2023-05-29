@@ -293,14 +293,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.5821016, y: 0, z: 0, w: 0.813116}
-  m_LocalPosition: {x: 0, y: 7, z: -2.41}
+  m_LocalRotation: {x: 0.50596195, y: -0, z: -0, w: 0.86255586}
+  m_LocalPosition: {x: 0, y: 5.86, z: -3.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 71.197, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 60.79, y: 0, z: 0}
 --- !u!1 &1097863824
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +371,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   cellPrefab: {fileID: 8331667419815577991, guid: 33de107dfcce4844ca7502c922ffc0ac, type: 3}
   robotPrefab: {fileID: 8331126558588716320, guid: d067675213b13af4cbc050ede83d07d1, type: 3}
+  trashPickupEffectPrefab: {fileID: 421206028904305758, guid: ab1e2b2fdbfd9b4448e68d28ecb8b4a7, type: 3}
 --- !u!4 &1097863826
 Transform:
   m_ObjectHideFlags: 0
