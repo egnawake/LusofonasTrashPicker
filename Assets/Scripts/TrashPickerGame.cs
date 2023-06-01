@@ -50,7 +50,11 @@ public class TrashPickerGame
 
     public CellState CellAt(Position pos)
     {
-        if (IsCellVisible(pos))
+        if (IsPositionIllegal(pos))
+        {
+            return CellState.Wall;
+        }
+        else if (IsCellVisible(pos))
         {
             return (CellState)grid[pos.Row, pos.Col];
         }

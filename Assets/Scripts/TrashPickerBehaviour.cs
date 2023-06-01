@@ -1,5 +1,8 @@
-using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using NaiveBayes;
 
 public class TrashPickerBehaviour : MonoBehaviour
 {
@@ -36,11 +39,18 @@ public class TrashPickerBehaviour : MonoBehaviour
     private GameObject robot;
     private bool animating = false;
 
+    private bool aiEnabled = false;
+    private bool aiPaused = false;
+
+    private NaiveBayesClassifier nbClassifier;
+    private Attrib centerCell, northCell, eastCell, southCell, westCell;
+
     public ActionEvent OnAction => onAction;
 
     private void Awake()
     {
         onAction = new ActionEvent();
+        InitializeAI();
     }
 
     private void Start()
@@ -72,19 +82,159 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (!animating)
-            DoAction();
+        if (animating) return;
+
+        if (!aiEnabled)
+        {
+            DoActionPlayer();
+        }
+        else if (!aiPaused)
+        {
+            DoActionAI();
+        }
+
+        if (Input.GetButtonDown("DEBUG Enable AI"))
+        {
+            aiEnabled = !aiEnabled;
+        }
+
+        if (Input.GetButtonDown("DEBUG New Game"))
+        {
+            game = new TrashPickerGame(rows, cols, maxTurns, trashSpawnChance);
+            UpdateView();
+        }
     }
 
-    private void DoAction()
+    private void InitializeAI()
     {
+        string[] attribValues = new string[]
+        {
+            "Empty",
+            "Trash",
+            "Wall"
+        };
+
+        centerCell = new Attrib("centerCell", attribValues);
+        northCell = new Attrib("northCell", attribValues);
+        eastCell = new Attrib("eastCell", attribValues);
+        southCell = new Attrib("southCell", attribValues);
+        westCell = new Attrib("westCell", attribValues);
+
+        string[] actionNames = Enum.GetNames(typeof(RobotAction));
+        nbClassifier = new NaiveBayesClassifier(actionNames,
+            new Attrib[]
+            {
+                centerCell,
+                northCell,
+                eastCell,
+                southCell,
+                westCell
+            });
+    }
+
+    private void DoActionPlayer()
+    {
+        RobotAction action = RobotAction.None;
+
         if (Input.GetButtonDown("Skip Turn"))
         {
-            game.SkipTurn();
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
+            action = RobotAction.SkipTurn;
         }
         else if (Input.GetButtonDown("Collect"))
+        {
+            action = RobotAction.CollectTrash;
+        }
+        else if (Input.GetButtonDown("Up"))
+        {
+            action = RobotAction.MoveNorth;
+        }
+        else if (Input.GetButtonDown("Right"))
+        {
+            action = RobotAction.MoveEast;
+        }
+        else if (Input.GetButtonDown("Down"))
+        {
+            action = RobotAction.MoveSouth;
+        }
+        else if (Input.GetButtonDown("Left"))
+        {
+            action = RobotAction.MoveWest;
+        }
+        else if (Input.GetButtonDown("Move Random"))
+        {
+            action = RobotAction.MoveRandom;
+        }
+
+        if (action != RobotAction.None)
+        {
+            nbClassifier.Update(action.ToString(), new Dictionary<Attrib, string>()
+            {
+                { centerCell, game.CellAt(game.RobotPosition).ToString() },
+                { northCell, game.CellAt(game.RobotPosition + new Position(-1, 0)).ToString() },
+                { eastCell, game.CellAt(game.RobotPosition + new Position(0, 1)).ToString() },
+                { southCell, game.CellAt(game.RobotPosition + new Position(1, 0)).ToString() },
+                { westCell, game.CellAt(game.RobotPosition + new Position(0, -1)).ToString() }
+            });
+
+            DoAction(action);
+        }
+    }
+
+    private void DoActionAI()
+    {
+        RobotAction action = RobotAction.None;
+
+        string prediction = nbClassifier.Predict(new Dictionary<Attrib, string>
+        {
+            { centerCell, game.CellAt(game.RobotPosition).ToString() },
+            { northCell, game.CellAt(game.RobotPosition + new Position(-1, 0)).ToString() },
+            { eastCell, game.CellAt(game.RobotPosition + new Position(0, 1)).ToString() },
+            { southCell, game.CellAt(game.RobotPosition + new Position(1, 0)).ToString() },
+            { westCell, game.CellAt(game.RobotPosition + new Position(0, -1)).ToString() }
+        });
+        Debug.Log($"AI predicted [{prediction}]");
+
+        Enum.TryParse<RobotAction>(prediction, out action);
+
+        DoAction(action);
+
+        aiPaused = true;
+        StartCoroutine(AIPauseTimer());
+    }
+
+    private IEnumerator AIPauseTimer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        aiPaused = false;
+    }
+
+    private void DoAction(RobotAction action)
+    {
+        if (action == RobotAction.MoveNorth)
+        {
+            game.MoveRobot(Direction.North);
+        }
+        else if (action == RobotAction.MoveEast)
+        {
+            game.MoveRobot(Direction.East);
+        }
+        else if (action == RobotAction.MoveSouth)
+        {
+            game.MoveRobot(Direction.South);
+        }
+        else if (action == RobotAction.MoveWest)
+        {
+            game.MoveRobot(Direction.West);
+        }
+        else if (action == RobotAction.MoveRandom)
+        {
+            game.MoveRobot((Direction)UnityEngine.Random.Range(0, 4));
+        }
+        else if (action == RobotAction.SkipTurn)
+        {
+            game.SkipTurn();
+        }
+        else if (action == RobotAction.CollectTrash)
         {
             bool collected = game.CollectTrash();
             if (collected)
@@ -93,39 +243,10 @@ public class TrashPickerBehaviour : MonoBehaviour
                     CellToWorldPosition(game.RobotPosition),
                     Quaternion.identity);
             }
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
         }
-        else if (Input.GetButtonDown("Up"))
-        {
-            game.MoveRobot(Direction.North);
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
-        }
-        else if (Input.GetButtonDown("Right"))
-        {
-            game.MoveRobot(Direction.East);
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
-        }
-        else if (Input.GetButtonDown("Down"))
-        {
-            game.MoveRobot(Direction.South);
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
-        }
-        else if (Input.GetButtonDown("Left"))
-        {
-            game.MoveRobot(Direction.West);
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
-        }
-        else if (Input.GetButtonDown("Move Random"))
-        {
-            game.MoveRobot((Direction)Random.Range(0, 4));
-            UpdateView();
-            onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
-        }
+
+        UpdateView();
+        onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
     }
 
     private Vector3 CellToWorldPosition(Position pos)
