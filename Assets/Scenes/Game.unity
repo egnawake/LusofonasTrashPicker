@@ -1399,7 +1399,7 @@ MonoBehaviour:
   maxTurns: 10000
   trashSpawnChance: 0.4000000059604645
   gridSpacing: 1.2
-  robotMoveTime: 0.5
+  robotMoveTime: 0.3
   robotMoveCurve:
     serializedVersion: 2
     m_Curve:
