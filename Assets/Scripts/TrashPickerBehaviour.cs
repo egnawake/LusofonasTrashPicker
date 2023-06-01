@@ -228,7 +228,8 @@ public class TrashPickerBehaviour : MonoBehaviour
         }
         else if (action == RobotAction.MoveRandom)
         {
-            game.MoveRobot((Direction)UnityEngine.Random.Range(0, 4));
+            game.MoveRobot((Direction)UnityEngine.Random.Range(0,
+                Enum.GetNames(typeof(Direction)).Length));
         }
         else if (action == RobotAction.SkipTurn)
         {
