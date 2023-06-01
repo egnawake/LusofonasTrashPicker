@@ -82,15 +82,16 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (animating) return;
-
-        if (!aiEnabled)
+        if (!animating)
         {
-            DoActionPlayer();
-        }
-        else if (!aiPaused)
-        {
-            DoActionAI();
+            if (!aiEnabled)
+            {
+                DoActionPlayer();
+            }
+            else if (!aiPaused)
+            {
+                DoActionAI();
+            }
         }
 
         if (Input.GetButtonDown("DEBUG Enable AI"))
@@ -192,7 +193,14 @@ public class TrashPickerBehaviour : MonoBehaviour
             { southCell, game.CellAt(game.RobotPosition + new Position(1, 0)).ToString() },
             { westCell, game.CellAt(game.RobotPosition + new Position(0, -1)).ToString() }
         });
-        Debug.Log($"AI predicted [{prediction}]");
+
+        // Select random action if prediction gave no result
+        if (prediction == "")
+        {
+            string[] actionNames = Enum.GetNames(typeof(RobotAction));
+            int index = UnityEngine.Random.Range(0, actionNames.Length);
+            prediction = actionNames[index];
+        }
 
         Enum.TryParse<RobotAction>(prediction, out action);
 
