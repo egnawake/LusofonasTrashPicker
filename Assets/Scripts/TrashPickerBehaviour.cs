@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using NaiveBayes;
 
 public class TrashPickerBehaviour : MonoBehaviour
@@ -38,6 +39,7 @@ public class TrashPickerBehaviour : MonoBehaviour
     private CellView[,] cellObjects;
     private GameObject robot;
     private bool animating = false;
+    private HUD hud;
 
     private bool aiEnabled = false;
     private bool aiPaused = false;
@@ -46,23 +48,28 @@ public class TrashPickerBehaviour : MonoBehaviour
     private Attrib centerCell, northCell, eastCell, southCell, westCell;
 
     public ActionEvent OnAction => onAction;
+    public UnityEvent OnGameOver => onGameOver;
+    public bool IsAI
+    {
+        set => aiEnabled = value;
+    }
 
     private void Awake()
     {
         onAction = new ActionEvent();
+        onGameOver = new UnityEvent();
         InitializeAI();
     }
 
     private void Start()
     {
-        // Instantiate game
         game = new TrashPickerGame(rows, cols, maxTurns, trashSpawnChance);
 
         cellObjects = new CellView[rows, cols];
 
-        for (int i = 0; i < game.Rows; i++)
+        for (int i = 0; i < rows; i++)
         {
-            for (int j = 0; j < game.Cols; j++)
+            for (int j = 0; j < cols; j++)
             {
                 CellView cellObject = Instantiate(cellPrefab, transform);
 
@@ -73,9 +80,11 @@ public class TrashPickerBehaviour : MonoBehaviour
             }
         }
 
-        robot = Instantiate(robotPrefab);
+        robot = Instantiate(robotPrefab, transform);
         robot.transform.position = CellToWorldPosition(new Position(0, 0));
         robot.transform.rotation = Quaternion.LookRotation(-Vector3.forward);
+
+        hud = GetComponentInChildren<HUD>();
 
         UpdateView();
     }
@@ -121,8 +130,12 @@ public class TrashPickerBehaviour : MonoBehaviour
         southCell = new Attrib("southCell", attribValues);
         westCell = new Attrib("westCell", attribValues);
 
-        string[] actionNames = Enum.GetNames(typeof(RobotAction));
-        nbClassifier = new NaiveBayesClassifier(actionNames,
+        // Discard RobotAction.None before initializing NBC
+        string[] allActions = Enum.GetNames(typeof(RobotAction));
+        string[] validActions = new string[allActions.Length - 1];
+        Array.Copy(allActions, 1, validActions, 0, allActions.Length - 1);
+
+        nbClassifier = new NaiveBayesClassifier(validActions,
             new Attrib[]
             {
                 centerCell,
@@ -135,6 +148,9 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     private void DoActionPlayer()
     {
+        if (game.GameOver)
+            return;
+
         RobotAction action = RobotAction.None;
 
         if (Input.GetButtonDown("Skip Turn"))
@@ -183,6 +199,9 @@ public class TrashPickerBehaviour : MonoBehaviour
 
     private void DoActionAI()
     {
+        if (game.GameOver)
+            return;
+
         RobotAction action = RobotAction.None;
 
         string prediction = nbClassifier.Predict(new Dictionary<Attrib, string>
@@ -197,14 +216,16 @@ public class TrashPickerBehaviour : MonoBehaviour
         // Select random action if prediction gave no result
         if (prediction == "")
         {
-            string[] actionNames = Enum.GetNames(typeof(RobotAction));
-            int index = UnityEngine.Random.Range(0, actionNames.Length);
-            prediction = actionNames[index];
+            string[] actions = Enum.GetNames(typeof(RobotAction));
+            int index = UnityEngine.Random.Range(1, actions.Length);
+            prediction = actions[index];
         }
 
         Enum.TryParse<RobotAction>(prediction, out action);
 
         DoAction(action);
+
+        Debug.Log($"AI wants to {action.ToString()}");
 
         aiPaused = true;
         StartCoroutine(AIPauseTimer());
@@ -255,7 +276,11 @@ public class TrashPickerBehaviour : MonoBehaviour
         }
 
         UpdateView();
+
         onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
+
+        if (game.GameOver)
+            onGameOver.Invoke();
     }
 
     private Vector3 CellToWorldPosition(Position pos)
@@ -264,11 +289,11 @@ public class TrashPickerBehaviour : MonoBehaviour
             -(pos.Row * gridSpacing));
 
         // Offset to center
-        float rowLength = gridSpacing * (game.Cols - 1);
-        float colLength = gridSpacing * (game.Rows - 1);
+        float rowLength = gridSpacing * (cols - 1);
+        float colLength = gridSpacing * (rows - 1);
         Vector3 offset = new Vector3(-rowLength / 2, 0, colLength / 2);
 
-        return position + offset;
+        return transform.TransformPoint(position + offset);
     }
 
     private void UpdateView()
@@ -291,6 +316,9 @@ public class TrashPickerBehaviour : MonoBehaviour
             robot.transform.rotation = Quaternion.LookRotation(disp);
             StartCoroutine(AnimateRobot(currentPos, targetPos));
         }
+
+        hud.ShowScore(game.Score);
+        hud.ShowTurn(game.Turn, maxTurns);
     }
 
     private IEnumerator AnimateRobot(Vector3 start, Vector3 end)
@@ -311,4 +339,5 @@ public class TrashPickerBehaviour : MonoBehaviour
     }
 
     private ActionEvent onAction;
+    private UnityEvent onGameOver;
 }

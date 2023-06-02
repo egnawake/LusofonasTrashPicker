@@ -3,18 +3,16 @@ using TMPro;
 
 public class HUD : MonoBehaviour
 {
-    [SerializeField] private TrashPickerBehaviour gameBehaviour;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text turnText;
 
-    private void Start()
+    public void ShowScore(int value)
     {
-        gameBehaviour.OnAction.AddListener(HandleAction);
+        scoreText.text = value.ToString();
     }
 
-    private void HandleAction(int turn, int maxTurns, int score)
+    public void ShowTurn(int turn, int maxTurns)
     {
         turnText.text = $"{turn}/{maxTurns}";
-        scoreText.text = score.ToString();
     }
 }
