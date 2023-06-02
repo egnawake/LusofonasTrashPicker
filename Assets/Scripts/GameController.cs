@@ -18,8 +18,10 @@ public class GameController : MonoBehaviour
     [SerializeField] private Button gameOverReturnButton;
     [SerializeField] private Button highScoresReturnButton;
 
-    [SerializeField] private Transform cameraMenuTransform;
-    [SerializeField] private Transform cameraGameTransform;
+    [SerializeField] private float cameraSlideDuration = 1f;
+    [SerializeField] private AnimationCurve cameraSlideCurve;
+    [SerializeField] private Transform cameraSlideInStart;
+    [SerializeField] private Transform cameraSlideInEnd;
 
     private Camera mainCamera;
     private TrashPickerBehaviour trashPickerBehaviour;
@@ -27,6 +29,8 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         AttachButtonListeners();
+
+        mainCamera = Camera.main;
     }
 
     private void StartHumanGame()
@@ -46,6 +50,8 @@ public class GameController : MonoBehaviour
         trashPickerBehaviour = Instantiate(trashPickerBehaviourPrefab);
         trashPickerBehaviour.OnGameOver.AddListener(HandleGameOver);
         trashPickerBehaviour.IsAI = aiPlaying;
+
+        StartCoroutine(CameraSlideIn());
     }
 
     private void HandleGameOver()
@@ -91,5 +97,22 @@ public class GameController : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+    }
+
+    private IEnumerator CameraSlideIn()
+    {
+        float timer = 0;
+
+        while (timer < cameraSlideDuration)
+        {
+            float pct = cameraSlideCurve.Evaluate(timer / cameraSlideDuration);
+            Vector3 position = Vector3.Lerp(cameraSlideInStart.position,
+                cameraSlideInEnd.position, pct);
+            mainCamera.transform.position = position;
+
+            timer += Time.deltaTime;
+
+            yield return null;
+        }
     }
 }
