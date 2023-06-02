@@ -31,6 +31,10 @@ public class TrashPickerBehaviour : MonoBehaviour
     [SerializeField] private float robotMoveTime = 0.5f;
     [SerializeField] private AnimationCurve robotMoveCurve;
 
+    [SerializeField] private float robotSpawnDuration = 0.5f;
+    [SerializeField] private AnimationCurve robotSpawnCurve;
+    [SerializeField] private Transform robotSpawnStart;
+
     [SerializeField] private CellView cellPrefab;
     [SerializeField] private GameObject robotPrefab;
     [SerializeField] private GameObject trashPickupEffectPrefab;
@@ -81,8 +85,9 @@ public class TrashPickerBehaviour : MonoBehaviour
         }
 
         robot = Instantiate(robotPrefab, transform);
-        robot.transform.position = CellToWorldPosition(new Position(0, 0));
         robot.transform.rotation = Quaternion.LookRotation(-Vector3.forward);
+
+        StartCoroutine(AnimateRobotSpawn());
 
         hud = GetComponentInChildren<HUD>();
 
@@ -308,6 +313,15 @@ public class TrashPickerBehaviour : MonoBehaviour
         }
 
         // Update robot position and rotation
+        if (!animating)
+            UpdateRobot();
+
+        hud.ShowScore(game.Score);
+        hud.ShowTurn(game.Turn, maxTurns);
+    }
+
+    private void UpdateRobot()
+    {
         Vector3 currentPos = robot.transform.position;
         Vector3 targetPos = CellToWorldPosition(game.RobotPosition);
         Vector3 disp = targetPos - currentPos;
@@ -316,9 +330,6 @@ public class TrashPickerBehaviour : MonoBehaviour
             robot.transform.rotation = Quaternion.LookRotation(disp);
             StartCoroutine(AnimateRobot(currentPos, targetPos));
         }
-
-        hud.ShowScore(game.Score);
-        hud.ShowTurn(game.Turn, maxTurns);
     }
 
     private IEnumerator AnimateRobot(Vector3 start, Vector3 end)
@@ -332,6 +343,28 @@ public class TrashPickerBehaviour : MonoBehaviour
             float pct = robotMoveCurve.Evaluate(timer / robotMoveTime);
             robot.transform.position = Vector3.LerpUnclamped(start, end, pct);
             timer += Time.deltaTime;
+            yield return null;
+        }
+
+        animating = false;
+    }
+
+    private IEnumerator AnimateRobotSpawn()
+    {
+        animating = true;
+
+        float timer = 0;
+
+        Vector3 endPosition = CellToWorldPosition(new Position(0, 0));
+
+        while (timer < robotSpawnDuration)
+        {
+            float pct = robotSpawnCurve.Evaluate(timer / robotSpawnDuration);
+            robot.transform.position = Vector3.Lerp(robotSpawnStart.position,
+                endPosition, pct);
+
+            timer += Time.deltaTime;
+
             yield return null;
         }
 
