@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1473218654531775605
+--- !u!1 &2175458827346842933
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,81 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7603908778706392507}
+  - component: {fileID: 5899894155999337417}
+  - component: {fileID: 5500236453499216363}
   m_Layer: 0
-  m_Name: RobotSpawnStart
+  m_Name: GameView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7603908778706392507
+--- !u!4 &5899894155999337417
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473218654531775605}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6385153546701181883}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6385153546701181881
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6385153546701181883}
-  - component: {fileID: 6385153546701181880}
-  m_Layer: 0
-  m_Name: TrashPickerBehaviour
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6385153546701181883
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6385153546701181881}
+  m_GameObject: {fileID: 2175458827346842933}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4451331856486725764}
-  - {fileID: 7603908778706392507}
+  - {fileID: 4918093571792658407}
+  - {fileID: 3438948461720175490}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6385153546701181880
+--- !u!114 &5500236453499216363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6385153546701181881}
+  m_GameObject: {fileID: 2175458827346842933}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43781c7a67447144a82df8e683ae8a5c, type: 3}
+  m_Script: {fileID: 11500000, guid: bc3b24f62d4b8d54ba6b18391d818661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 5
-  cols: 5
-  maxTurns: 20
-  trashSpawnChance: 0.4000000059604645
   gridSpacing: 1.2
-  robotMoveTime: 0.3
+  robotMoveDuration: 0.35
   robotMoveCurve:
     serializedVersion: 2
     m_Curve:
@@ -116,7 +81,100 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  robotSpawnDuration: 1.5
+  robotBumpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.23616788
+      value: 0.27845272
+      inSlope: 0.017511543
+      outSlope: 0.017511543
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.2690366
+    - serializedVersion: 3
+      time: 0.8791847
+      value: -0.014108468
+      inSlope: 0.0027005188
+      outSlope: 0.0027005188
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.97825867
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0.25497913
+      outSlope: 0.25497913
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.8612549
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  robotSkipTurnCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.24116544
+      outSlope: 0.24116544
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.61800474
+    - serializedVersion: 3
+      time: 0.26294297
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.51031005
+      value: 0.03227353
+      inSlope: -0.6711502
+      outSlope: 0.98245037
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.24380797
+      outWeight: 0.21010554
+    - serializedVersion: 3
+      time: 0.7587088
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.026685098
+      outSlope: -0.026685098
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.9784053
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  robotSpawnDuration: 2
   robotSpawnCurve:
     serializedVersion: 2
     m_Curve:
@@ -130,19 +188,19 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.23199898
-      value: 0.6968363
-      inSlope: 1.4363645
-      outSlope: 1.4363645
+      time: 0.30151802
+      value: 0.6738413
+      inSlope: 1.693469
+      outSlope: 1.693469
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.15976655
+      outWeight: 0.09907232
     - serializedVersion: 3
       time: 0.87675697
       value: 1
-      inSlope: 0.0261259
-      outSlope: 0.0261259
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.25590345
@@ -154,21 +212,51 @@ MonoBehaviour:
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 1
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  robotSpawnStart: {fileID: 7603908778706392507}
   cellPrefab: {fileID: 8331667419815577991, guid: 33de107dfcce4844ca7502c922ffc0ac, type: 3}
   robotPrefab: {fileID: 8331126558588716320, guid: d067675213b13af4cbc050ede83d07d1, type: 3}
   trashPickupEffectPrefab: {fileID: 421206028904305758, guid: ab1e2b2fdbfd9b4448e68d28ecb8b4a7, type: 3}
---- !u!1001 &8240998457805520727
+--- !u!1 &7160211135044014502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3438948461720175490}
+  m_Layer: 0
+  m_Name: RobotSpawnStart
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3438948461720175490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7160211135044014502}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5899894155999337417}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &854332465489778740
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 6385153546701181883}
+    m_TransformParent: {fileID: 5899894155999337417}
     m_Modifications:
     - target: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
       propertyPath: m_Pivot.x
@@ -204,6 +292,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
@@ -260,8 +360,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
---- !u!224 &4451331856486725764 stripped
+--- !u!224 &4918093571792658407 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5736361971449546707, guid: 080e9d31c8cd57141b70678a75d336f5, type: 3}
-  m_PrefabInstance: {fileID: 8240998457805520727}
+  m_PrefabInstance: {fileID: 854332465489778740}
   m_PrefabAsset: {fileID: 0}

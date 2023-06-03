@@ -220,7 +220,7 @@ RectTransform:
   - {fileID: 1993878607}
   - {fileID: 1965392929}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -860,7 +860,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fca9c514e1001f4089583321f7dae0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trashPickerBehaviourPrefab: {fileID: 6385153546701181880, guid: a59be8678efd81e44858156623bd1774, type: 3}
+  gridRows: 5
+  gridColumns: 5
+  maxTurns: 20
+  trashSpawnChance: 0.4
+  gameViewPrefab: {fileID: 5500236453499216363, guid: fde656d382de3284b9ce512440b4a262, type: 3}
   mainMenu: {fileID: 1639409996}
   gameOverScreen: {fileID: 39528484}
   highScoresScreen: {fileID: 1426304506}
@@ -1577,7 +1581,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1168784425
 GameObject:
@@ -2186,7 +2190,7 @@ RectTransform:
   - {fileID: 1989006247}
   - {fileID: 614349727}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2450,7 +2454,7 @@ RectTransform:
   - {fileID: 1447789897}
   - {fileID: 396169681}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2486,7 +2490,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1764209344
 PrefabInstance:
@@ -2818,7 +2822,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1977936440
 PrefabInstance:
@@ -3313,7 +3317,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 60.79038, y: 0, z: 0}
 --- !u!1773428102 &2089039096
 ParentConstraint:
