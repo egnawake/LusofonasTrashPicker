@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour
 
     // High scores screen fields
     [SerializeField] private GameObject highScoresScreen;
-    [SerializeField] private TMP_Text[] highScoreFields;
+    [SerializeField] private HighScoreEntry[] highScoreEntries;
     [SerializeField] private Button highScoresReturnButton;
 
     // Camera animation fields
@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
     private TrashPickerGame game;
     private GameView gameView;
 
-    private List<int> highScores;
+    private List<HighScore> highScores;
 
     private bool isAI = false;
     private bool aiPaused = false;
@@ -80,7 +80,12 @@ public class GameController : MonoBehaviour
             cameraMovement.enabled = false;
         }
 
-        highScores = new List<int>();
+        highScores = new List<HighScore>();
+
+        foreach (HighScoreEntry entry in highScoreEntries)
+        {
+            entry.Clear();
+        }
 
         InitializeAI();
     }
@@ -289,7 +294,7 @@ public class GameController : MonoBehaviour
         gameOverScreen.SetActive(true);
         gameOverScoreText.text = game.Score.ToString();
 
-        int placement = AddHighScore(game.Score);
+        int placement = AddHighScore(new HighScore(game.Score, isAI));
 
         if (placement > 0)
         {
@@ -307,7 +312,7 @@ public class GameController : MonoBehaviour
         highScoresScreen.SetActive(true);
     }
 
-    private int AddHighScore(int score)
+    private int AddHighScore(HighScore highScore)
     {
         int placement = 0;
         int index = -1;
@@ -316,7 +321,7 @@ public class GameController : MonoBehaviour
         // store that index and insert the new score there
         for (int i = 0; i < highScores.Count; i++)
         {
-            if (score > highScores[i])
+            if (highScore.Score > highScores[i].Score)
             {
                 index = i;
                 break;
@@ -324,7 +329,7 @@ public class GameController : MonoBehaviour
         }
         if (index >= 0)
         {
-            highScores.Insert(index, score);
+            highScores.Insert(index, highScore);
             placement = index + 1;
         }
 
@@ -332,7 +337,7 @@ public class GameController : MonoBehaviour
         // there is space in the scores list, add score
         if (placement == 0 && highScores.Count < 6)
         {
-            highScores.Add(score);
+            highScores.Add(highScore);
             placement = highScores.Count;
         }
 
@@ -345,7 +350,8 @@ public class GameController : MonoBehaviour
         // Update view with current score list
         for (int i = 0; i < highScores.Count; i++)
         {
-            highScoreFields[i].text = highScores[i].ToString();
+            highScoreEntries[i].Score = highScores[i].Score;
+            highScoreEntries[i].AIScore = highScores[i].PlayedByAI;
         }
 
         return placement;
