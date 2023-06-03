@@ -198,7 +198,7 @@ public class GameView : MonoBehaviour
         // Offset to center
         float rowLength = gridSpacing * (game.Cols - 1);
         float colLength = gridSpacing * (game.Rows - 1);
-        Vector3 offset = new Vector3(-rowLength / 2, 0, colLength / 2);
+        Vector3 offset = Vector3.zero;
 
         return transform.TransformPoint(position + offset);
     }

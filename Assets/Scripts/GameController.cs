@@ -55,6 +55,8 @@ public class GameController : MonoBehaviour
     private bool isAI = false;
     private bool aiPaused = false;
 
+    private CameraMovement cameraMovement;
+
     private NaiveBayesClassifier nbClassifier;
     private Attrib centerCell, northCell, eastCell, southCell, westCell;
 
@@ -64,6 +66,11 @@ public class GameController : MonoBehaviour
         AttachButtonListeners();
 
         mainCamera = Camera.main;
+        cameraMovement = mainCamera.GetComponent<CameraMovement>();
+        if (cameraMovement != null)
+        {
+            cameraMovement.enabled = false;
+        }
 
         highScores = new List<int>();
 
@@ -241,12 +248,22 @@ public class GameController : MonoBehaviour
 
         this.isAI = isAI;
 
+        if (cameraMovement != null)
+        {
+            cameraMovement.enabled = true;
+        }
+
         StartCoroutine(CameraSlideIn());
         StartCoroutine(PlayGame());
     }
 
     private void HandleGameOver()
     {
+        if (cameraMovement != null)
+        {
+            cameraMovement.enabled = false;
+        }
+
         gameOverScreen.SetActive(true);
 
         gameOverScoreText.text = game.Score.ToString();
