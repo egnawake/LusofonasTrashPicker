@@ -52,7 +52,7 @@ public class TrashPickerBehaviour : MonoBehaviour
     private Attrib centerCell, northCell, eastCell, southCell, westCell;
 
     public ActionEvent OnAction => onAction;
-    public UnityEvent OnGameOver => onGameOver;
+    public GameOverEvent OnGameOver => onGameOver;
     public bool IsAI
     {
         set => aiEnabled = value;
@@ -61,7 +61,7 @@ public class TrashPickerBehaviour : MonoBehaviour
     private void Awake()
     {
         onAction = new ActionEvent();
-        onGameOver = new UnityEvent();
+        onGameOver = new GameOverEvent();
         InitializeAI();
     }
 
@@ -230,8 +230,6 @@ public class TrashPickerBehaviour : MonoBehaviour
 
         DoAction(action);
 
-        Debug.Log($"AI wants to {action.ToString()}");
-
         aiPaused = true;
         StartCoroutine(AIPauseTimer());
     }
@@ -285,7 +283,7 @@ public class TrashPickerBehaviour : MonoBehaviour
         onAction.Invoke(game.Turn, game.MaxTurns, game.Score);
 
         if (game.GameOver)
-            onGameOver.Invoke();
+            onGameOver.Invoke(game.Score);
     }
 
     private Vector3 CellToWorldPosition(Position pos)
@@ -372,5 +370,5 @@ public class TrashPickerBehaviour : MonoBehaviour
     }
 
     private ActionEvent onAction;
-    private UnityEvent onGameOver;
+    private GameOverEvent onGameOver;
 }

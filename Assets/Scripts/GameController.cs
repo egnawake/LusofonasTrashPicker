@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
@@ -9,6 +11,11 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private GameObject highScoresScreen;
+    [SerializeField] private GameObject gameOverHighScoreDisplay;
+    [SerializeField] private TMP_Text gameOverScoreText;
+    [SerializeField] private TMP_Text gameOverHighScoreText;
+
+    [SerializeField] private TMP_Text[] highScoreFields;
 
     [SerializeField] private Button newHumanGameButton;
     [SerializeField] private Button newAIGameButton;
@@ -26,11 +33,15 @@ public class GameController : MonoBehaviour
     private Camera mainCamera;
     private TrashPickerBehaviour trashPickerBehaviour;
 
+    private List<int> highScores;
+
     private void Start()
     {
         AttachButtonListeners();
 
         mainCamera = Camera.main;
+
+        highScores = new List<int>();
     }
 
     private void StartHumanGame()
@@ -54,9 +65,22 @@ public class GameController : MonoBehaviour
         StartCoroutine(CameraSlideIn());
     }
 
-    private void HandleGameOver()
+    private void HandleGameOver(int score)
     {
         gameOverScreen.SetActive(true);
+
+        gameOverScoreText.text = score.ToString();
+
+        int placement = AddHighScore(score);
+        bool showHighScore = false;
+
+        if (placement > 0)
+        {
+            showHighScore = true;
+            gameOverHighScoreText.text = $"#{placement}";
+        }
+
+        gameOverHighScoreDisplay.SetActive(showHighScore);
     }
 
     private void ShowHighScores()
@@ -64,6 +88,50 @@ public class GameController : MonoBehaviour
         mainMenu.SetActive(false);
 
         highScoresScreen.SetActive(true);
+    }
+
+    private int AddHighScore(int score)
+    {
+        int placement = 0;
+        int index = -1;
+
+        // If this score is greater than a score on the table,
+        // store that index and insert the new score there
+        for (int i = 0; i < highScores.Count; i++)
+        {
+            if (score > highScores[i])
+            {
+                index = i;
+                break;
+            }
+        }
+        if (index >= 0)
+        {
+            highScores.Insert(index, score);
+            placement = index + 1;
+        }
+
+        // If score did not beat any previous score and
+        // there is space in the scores list, add score
+        if (placement == 0 && highScores.Count < 6)
+        {
+            highScores.Add(score);
+            placement = highScores.Count;
+        }
+
+        // Limit scores list size
+        if (highScores.Count > 6)
+        {
+            highScores.RemoveAt(highScores.Count - 1);
+        }
+
+        // Update view with current score list
+        for (int i = 0; i < highScores.Count; i++)
+        {
+            highScoreFields[i].text = highScores[i].ToString();
+        }
+
+        return placement;
     }
 
     private void OpenMainMenu()
