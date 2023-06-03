@@ -67,13 +67,17 @@ public class GameView : MonoBehaviour
         InitializeRobot();
         hud = GetComponentInChildren<HUD>();
 
-        Draw(RobotAction.None, true, game.RobotPosition);
+        DrawCells();
+
+        hud.ShowScore(game.Score);
+        hud.ShowTurn(game.Turn, game.MaxTurns);
     }
 
-    public void Draw(RobotAction lastAction, bool success, Position lastPosition)
+    public void Draw(RobotAction lastAction, bool success, Position lastPosition,
+        Position targetPosition)
     {
         DrawCells();
-        DrawRobot(lastAction, lastPosition);
+        DrawRobot(lastAction, success, lastPosition, targetPosition);
         DrawTrashEffect(lastAction, success);
 
         hud.ShowScore(game.Score);
@@ -126,7 +130,8 @@ public class GameView : MonoBehaviour
         }
     }
 
-    private void DrawRobot(RobotAction lastAction, Position lastPosition)
+    private void DrawRobot(RobotAction lastAction, bool success,
+        Position lastPosition, Position targetPosition)
     {
         if (animating) return;
 
@@ -137,9 +142,9 @@ public class GameView : MonoBehaviour
             || lastAction == RobotAction.MoveRandom)
         {
             Vector3 start = CellToWorldPosition(lastPosition);
-            Vector3 end = CellToWorldPosition(game.RobotPosition);
+            Vector3 end = CellToWorldPosition(targetPosition);
 
-            if (start != end)
+            if (success)
             {
                 robot.transform.rotation = Quaternion.LookRotation(
                     end - start);
@@ -148,16 +153,6 @@ public class GameView : MonoBehaviour
             }
             else
             {
-                // Change end to be the target position
-                end = CellToWorldPosition(game.RobotPosition + lastAction switch
-                    {
-                        RobotAction.MoveNorth => new Position(-1, 0),
-                        RobotAction.MoveEast => new Position(0, 1),
-                        RobotAction.MoveSouth => new Position(1, 0),
-                        RobotAction.MoveWest => new Position(0, -1),
-                        _ => throw new ArgumentException("Invalid robot action")
-                    });
-
                 robot.transform.rotation = Quaternion.LookRotation(
                     end - start);
                 StartCoroutine(AnimateRobotMovement(start, end, robotBumpCurve,

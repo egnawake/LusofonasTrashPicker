@@ -28,6 +28,7 @@ public class TrashPickerGame
     public int MaxTurns => maxTurns;
 
     public Position RobotPosition => robotPosition;
+    public Position TargetPosition { get; private set; }
 
     public bool GameOver => turn >= maxTurns;
 
@@ -44,6 +45,8 @@ public class TrashPickerGame
                     ? InternalCellState.Trash : InternalCellState.Empty;
             }
         }
+
+        TargetPosition = robotPosition;
 
         this.maxTurns = maxTurns;
     }
@@ -71,7 +74,7 @@ public class TrashPickerGame
 
         turn++;
 
-        Position targetPos = robotPosition + dir switch
+        TargetPosition = robotPosition + dir switch
         {
             Direction.North => new Position(-1, 0),
             Direction.East => new Position(0, 1),
@@ -80,13 +83,14 @@ public class TrashPickerGame
             _ => throw new ArgumentException("Invalid direction")
         };
 
-        if (IsPositionIllegal(targetPos))
+        if (IsPositionIllegal(TargetPosition))
         {
             score -= 5;
             return false;
         }
 
-        robotPosition = targetPos;
+        robotPosition = TargetPosition;
+
         return true;
     }
 

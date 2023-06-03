@@ -192,24 +192,25 @@ public class GameController : MonoBehaviour
 
         if (action == RobotAction.MoveNorth)
         {
-            game.MoveRobot(Direction.North);
+            actionSuccess = game.MoveRobot(Direction.North);
         }
         else if (action == RobotAction.MoveEast)
         {
-            game.MoveRobot(Direction.East);
+            actionSuccess = game.MoveRobot(Direction.East);
         }
         else if (action == RobotAction.MoveSouth)
         {
-            game.MoveRobot(Direction.South);
+            actionSuccess = game.MoveRobot(Direction.South);
         }
         else if (action == RobotAction.MoveWest)
         {
-            game.MoveRobot(Direction.West);
+            actionSuccess = game.MoveRobot(Direction.West);
         }
         else if (action == RobotAction.MoveRandom)
         {
-            game.MoveRobot((Direction)UnityEngine.Random.Range(0,
-                Enum.GetNames(typeof(Direction)).Length));
+            Direction dir = (Direction)UnityEngine.Random.Range(0,
+                Enum.GetNames(typeof(Direction)).Length);
+            actionSuccess = game.MoveRobot(dir);
         }
         else if (action == RobotAction.SkipTurn)
         {
@@ -220,7 +221,7 @@ public class GameController : MonoBehaviour
             actionSuccess = game.CollectTrash();
         }
 
-        gameView.Draw(action, actionSuccess, lastPosition);
+        gameView.Draw(action, actionSuccess, lastPosition, game.TargetPosition);
 
         if (game.GameOver) HandleGameOver();
     }
