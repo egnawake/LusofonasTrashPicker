@@ -11,7 +11,6 @@ public class TrashPickerGame
     private int turn = 0;
     private int score = 0;
 
-    // TODO: maybe make an enumerator for this class?
     public int Rows => grid.GetLength(0);
     public int Cols => grid.GetLength(1);
 
@@ -37,6 +36,8 @@ public class TrashPickerGame
         rng = new Random();
 
         grid = new InternalCellState[rows, cols];
+
+        // Place trash on cell based on defined chance
         for (int r = 0; r < grid.GetLength(0); r++)
         {
             for (int c = 0; c < grid.GetLength(1); c++)
@@ -74,6 +75,7 @@ public class TrashPickerGame
 
         turn++;
 
+        // Convert direction to target position
         TargetPosition = robotPosition + dir switch
         {
             Direction.North => new Position(-1, 0),
@@ -83,6 +85,7 @@ public class TrashPickerGame
             _ => throw new ArgumentException("Invalid direction")
         };
 
+        // If robot would hit a wall, movement fails and score is reduced
         if (IsPositionIllegal(TargetPosition))
         {
             score -= 5;
@@ -109,14 +112,18 @@ public class TrashPickerGame
 
         turn++;
 
+        // If there isn't a cell at the robot's position, fail the action
         if (grid[robotPosition.Row, robotPosition.Col] != InternalCellState.Trash)
         {
             score -= 1;
             return false;
         }
 
+        // Remove trash from cell if trash is picked up
         SetCell(robotPosition, InternalCellState.Empty);
+
         score += 10;
+
         return true;
     }
 
@@ -127,12 +134,14 @@ public class TrashPickerGame
 
     private bool IsPositionIllegal(Position p)
     {
+        // Is position out of bounds?
         return p.Row < 0 || p.Row >= grid.GetLength(0) || p.Col < 0
             || p.Col >= grid.GetLength(1);
     }
 
     private bool IsCellVisible(Position pos)
     {
+        // Von Neumann neighborhood
         IList<Position> neighborhood = new List<Position>
         {
             robotPosition,

@@ -26,37 +26,41 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private GameView gameViewPrefab;
 
+    // Main menu fields
     [SerializeField] private GameObject mainMenu;
-    [SerializeField] private GameObject gameOverScreen;
-    [SerializeField] private GameObject highScoresScreen;
-    [SerializeField] private GameObject gameOverHighScoreDisplay;
-    [SerializeField] private TMP_Text gameOverScoreText;
-    [SerializeField] private TMP_Text gameOverHighScoreText;
-
-    [SerializeField] private TMP_Text[] highScoreFields;
-
     [SerializeField] private Button newHumanGameButton;
     [SerializeField] private Button newAIGameButton;
     [SerializeField] private Button highScoresButton;
     [SerializeField] private Button quitButton;
 
+    // Game over screen fields
+    [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private GameObject gameOverHighScoreDisplay;
+    [SerializeField] private TMP_Text gameOverScoreText;
+    [SerializeField] private TMP_Text gameOverHighScoreText;
     [SerializeField] private Button gameOverReturnButton;
+
+    // High scores screen fields
+    [SerializeField] private GameObject highScoresScreen;
+    [SerializeField] private TMP_Text[] highScoreFields;
     [SerializeField] private Button highScoresReturnButton;
 
+    // Camera animation fields
     [SerializeField] private float cameraSlideDuration = 1f;
     [SerializeField] private AnimationCurve cameraSlideCurve;
     [SerializeField] private Transform cameraSlideInStart;
     [SerializeField] private Transform cameraSlideInEnd;
 
-    private List<int> highScores;
+
     private Camera mainCamera;
-    private GameView gameView;
+    private CameraMovement cameraMovement;
     private TrashPickerGame game;
+    private GameView gameView;
+
+    private List<int> highScores;
+
     private bool isAI = false;
     private bool aiPaused = false;
-
-    private CameraMovement cameraMovement;
-
     private NaiveBayesClassifier nbClassifier;
     private Attrib centerCell, northCell, eastCell, southCell, westCell;
 
@@ -79,6 +83,7 @@ public class GameController : MonoBehaviour
 
     private void InitializeAI()
     {
+        // Set up attributes with possible cell states
         string[] attribValues = new string[]
         {
             "Empty",
@@ -97,6 +102,7 @@ public class GameController : MonoBehaviour
         string[] validActions = new string[allActions.Length - 1];
         Array.Copy(allActions, 1, validActions, 0, allActions.Length - 1);
 
+        // Initialize NBC
         nbClassifier = new NaiveBayesClassifier(validActions,
             new Attrib[]
             {
@@ -141,6 +147,7 @@ public class GameController : MonoBehaviour
             action = RobotAction.MoveRandom;
         }
 
+        // If there was player input, add new data to the NBC and do the action
         if (action != RobotAction.None)
         {
             nbClassifier.Update(action.ToString(), new Dictionary<Attrib, string>()
@@ -160,6 +167,7 @@ public class GameController : MonoBehaviour
     {
         RobotAction action = RobotAction.None;
 
+        // Ask NBC for a prediction
         string prediction = nbClassifier.Predict(new Dictionary<Attrib, string>
         {
             { centerCell, game.CellAt(game.RobotPosition).ToString() },
@@ -177,10 +185,12 @@ public class GameController : MonoBehaviour
             prediction = actions[index];
         }
 
+        // Convert prediction to RobotAction
         Enum.TryParse<RobotAction>(prediction, out action);
 
         DoAction(action);
 
+        // Pause the AI
         aiPaused = true;
         StartCoroutine(AIPauseTimer());
     }
@@ -240,37 +250,42 @@ public class GameController : MonoBehaviour
     {
         mainMenu.SetActive(false);
 
-        // Initialize game with parameters from Unity
+        // Initialize game with parameters from the Unity inspector
         game = new TrashPickerGame(gridRows, gridColumns, maxTurns,
             trashSpawnChance);
 
+        // Instantiate a view object and pass it the game
         gameView = Instantiate(gameViewPrefab);
         gameView.Setup(game);
 
         this.isAI = isAI;
 
+        // Activate camera movement
         if (cameraMovement != null)
         {
             cameraMovement.enabled = true;
         }
 
+        // Camera enter animation
         StartCoroutine(CameraSlideIn());
+
+        // Start the coroutine that processes input and updates the game
         StartCoroutine(PlayGame());
     }
 
     private void HandleGameOver()
     {
+        bool showHighScore = false;
+
         if (cameraMovement != null)
         {
             cameraMovement.enabled = false;
         }
 
         gameOverScreen.SetActive(true);
-
         gameOverScoreText.text = game.Score.ToString();
 
         int placement = AddHighScore(game.Score);
-        bool showHighScore = false;
 
         if (placement > 0)
         {
@@ -350,9 +365,9 @@ public class GameController : MonoBehaviour
         newHumanGameButton.onClick.AddListener(StartHumanGame);
         newAIGameButton.onClick.AddListener(StartAIGame);
         highScoresButton.onClick.AddListener(ShowHighScores);
+        quitButton.onClick.AddListener(Quit);
         gameOverReturnButton.onClick.AddListener(OpenMainMenu);
         highScoresReturnButton.onClick.AddListener(OpenMainMenu);
-        quitButton.onClick.AddListener(Quit);
     }
 
     private void Quit()

@@ -59,6 +59,7 @@ public class GameView : MonoBehaviour
 
     public void Setup(TrashPickerGame game)
     {
+        // Setup should only be called once
         if (this.game != null)
             return;
 
@@ -111,9 +112,10 @@ public class GameView : MonoBehaviour
         // Make robot face camera
         robot.transform.rotation = Quaternion.LookRotation(-Vector3.forward);
 
-        Vector3 firstCellPos = CellToWorldPosition(new Position(0, 0));
-        Vector3 start = firstCellPos + Vector3.up * 5f;
-        Vector3 end = firstCellPos;
+        // Animate spawn
+        Vector3 firstCellPosition = CellToWorldPosition(new Position(0, 0));
+        Vector3 start = firstCellPosition + Vector3.up * 5f;
+        Vector3 end = firstCellPosition;
         StartCoroutine(AnimateRobotMovement(start, end, robotSpawnCurve,
             robotSpawnDuration));
     }
@@ -144,6 +146,8 @@ public class GameView : MonoBehaviour
             Vector3 start = CellToWorldPosition(lastPosition);
             Vector3 end = CellToWorldPosition(targetPosition);
 
+            // If movement was successful, animate robot from last position
+            // to new position
             if (success)
             {
                 robot.transform.rotation = Quaternion.LookRotation(
@@ -151,6 +155,7 @@ public class GameView : MonoBehaviour
                 StartCoroutine(AnimateRobotMovement(start, end, robotMoveCurve,
                     robotMoveDuration));
             }
+            // If movement was not successful, animate robot bumping into a wall
             else
             {
                 robot.transform.rotation = Quaternion.LookRotation(
@@ -161,6 +166,7 @@ public class GameView : MonoBehaviour
         }
         else if (lastAction == RobotAction.SkipTurn)
         {
+            // Perform skip turn animation
             Vector3 start = CellToWorldPosition(game.RobotPosition);
             Vector3 end = start + Vector3.up * 1.2f;
             StartCoroutine(AnimateRobotMovement(start, end, robotSkipTurnCurve,
@@ -168,6 +174,7 @@ public class GameView : MonoBehaviour
         }
         else if (lastAction == RobotAction.CollectTrash)
         {
+            // Perform collect trash animation
             Vector3 start = CellToWorldPosition(game.RobotPosition);
             Vector3 end = start + robot.transform.rotation * Vector3.right * 1.2f;
             StartCoroutine(AnimateRobotMovement(start, end, robotCollectTrashCurve,
@@ -177,6 +184,7 @@ public class GameView : MonoBehaviour
 
     private void DrawTrashEffect(RobotAction lastAction, bool success)
     {
+        // Play trash effect if trash was collected
         if (lastAction == RobotAction.CollectTrash && success)
         {
             Instantiate(trashPickupEffectPrefab,
@@ -207,6 +215,7 @@ public class GameView : MonoBehaviour
 
         while (timer < duration)
         {
+            // Model Lerp time input according to curve
             float pct = curve.Evaluate(timer / duration);
             robot.transform.position = Vector3.LerpUnclamped(start, end, pct);
 
