@@ -25,6 +25,14 @@ public class GameView : MonoBehaviour
     private AnimationCurve robotSkipTurnCurve;
 
     [SerializeField]
+    [Tooltip("Duration of the robot collect trash animation.")]
+    private float robotCollectTrashDuration = 0.5f;
+
+    [SerializeField]
+    [Tooltip("Animation curve for when player picks up trash.")]
+    private AnimationCurve robotCollectTrashCurve;
+
+    [SerializeField]
     [Tooltip("Duration of the robot spawn animation.")]
     private float robotSpawnDuration = 0.5f;
 
@@ -67,6 +75,7 @@ public class GameView : MonoBehaviour
         DrawCells();
         DrawRobot(lastAction, lastPosition);
         DrawTrashEffect(lastAction, success);
+
         hud.ShowScore(game.Score);
         hud.ShowTurn(game.Turn, game.MaxTurns);
     }
@@ -165,9 +174,9 @@ public class GameView : MonoBehaviour
         else if (lastAction == RobotAction.CollectTrash)
         {
             Vector3 start = CellToWorldPosition(game.RobotPosition);
-            Vector3 end = start + Vector3.down * 1.2f;
-            StartCoroutine(AnimateRobotMovement(start, end, robotSkipTurnCurve,
-                robotMoveDuration));
+            Vector3 end = start + robot.transform.rotation * Vector3.right * 1.2f;
+            StartCoroutine(AnimateRobotMovement(start, end, robotCollectTrashCurve,
+                robotCollectTrashDuration));
         }
     }
 
