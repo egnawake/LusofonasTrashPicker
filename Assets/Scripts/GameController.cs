@@ -8,6 +8,10 @@ using TMPro;
 
 using NaiveBayes;
 
+/// <summary>
+/// Controller class for processing game input, updating the game model and
+/// communicating with the view.
+/// </summary>
 public class GameController : MonoBehaviour
 {
     [SerializeField]

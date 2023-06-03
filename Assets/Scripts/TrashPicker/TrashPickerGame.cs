@@ -1,21 +1,37 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Trash Picker game engine.
+/// </summary>
 public class TrashPickerGame
 {
-    private readonly int maxTurns;
     private readonly InternalCellState[,] grid;
+    private readonly int maxTurns;
     private readonly Random rng;
 
     private Position robotPosition = new Position(0, 0);
     private int turn = 0;
     private int score = 0;
 
+    /// <summary>
+    /// Number of rows in the grid.
+    /// </summary>
     public int Rows => grid.GetLength(0);
+
+    /// <summary>
+    /// Number of columns in the grid.
+    /// </summary>
     public int Cols => grid.GetLength(1);
 
+    /// <summary>
+    /// Current score.
+    /// </summary>
     public int Score => score;
 
+    /// <summary>
+    /// Current turn.
+    /// </summary>
     public int Turn
     {
         get => turn;
@@ -24,14 +40,45 @@ public class TrashPickerGame
             turn = value;
         }
     }
+
+    /// <summary>
+    /// Number of turns until the game is over.
+    /// </summary>
     public int MaxTurns => maxTurns;
 
+    /// <summary>
+    /// Current robot position.
+    /// </summary>
     public Position RobotPosition => robotPosition;
+
+    /// <summary>
+    /// Target position for the last move action performed.
+    /// </summary>
     public Position TargetPosition { get; private set; }
 
+    /// <summary>
+    /// Indicates whether the game has ended.
+    /// </summary>
     public bool GameOver => turn >= maxTurns;
 
-    public TrashPickerGame(int rows, int cols, int maxTurns, double trashSpawnChance)
+    /// <summary>
+    /// Instantiates a new Trash Picker game.
+    /// </summary>
+    ///
+    /// <param name="rows">
+    /// Number of rows in the game grid.
+    /// </param>
+    /// <param name="cols">
+    /// Number of columns in the game grid.
+    /// </param>
+    /// <param name="maxTurns">
+    /// Number of turns until the game is over.
+    /// </param>
+    /// <param name="trashSpawnChance">
+    /// Probability that a cell will have trash on it when the map is created.
+    /// </param>
+    public TrashPickerGame(int rows, int cols, int maxTurns,
+        double trashSpawnChance)
     {
         rng = new Random();
 
@@ -52,6 +99,17 @@ public class TrashPickerGame
         this.maxTurns = maxTurns;
     }
 
+    /// <summary>
+    /// Indicates what the state of the cell at <paramref name="pos" /> is.
+    /// </summary>
+    ///
+    /// <param name="pos">
+    /// The position to check.
+    /// </param>
+    ///
+    /// <returns>
+    /// The cell state.
+    /// </returns>
     public CellState CellAt(Position pos)
     {
         if (IsPositionIllegal(pos))
@@ -68,6 +126,17 @@ public class TrashPickerGame
         }
     }
 
+    /// <summary>
+    /// Tries to perform a move action towards <paramref name="dir" />.
+    /// </summary>
+    ///
+    /// <param name="dir">
+    /// The direction to move in.
+    /// </param>
+    ///
+    /// <returns>
+    /// A boolean indicating whether movement was successful.
+    /// </returns>
     public bool MoveRobot(Direction dir)
     {
         if (GameOver)
@@ -97,6 +166,9 @@ public class TrashPickerGame
         return true;
     }
 
+    /// <summary>
+    /// Skips the current turn.
+    /// </summary>
     public void SkipTurn()
     {
         if (GameOver)
@@ -105,6 +177,13 @@ public class TrashPickerGame
         turn++;
     }
 
+    /// <summary>
+    /// Tries to perform a collect trash action at the robot's position.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A boolean indicating whether trash could be collected.
+    /// </returns>
     public bool CollectTrash()
     {
         if (GameOver)

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// View class. Renders an instance of Trash Picker in Unity.
+/// </summary>
 public class GameView : MonoBehaviour
 {
     [SerializeField]
@@ -55,8 +58,17 @@ public class GameView : MonoBehaviour
     private bool animating = false;
 
 
+    /// <summary>
+    /// Indicates whether there is an animation in course.
+    /// </summary>
     public bool Animating => animating;
 
+    /// <summary>
+    /// Initializes the view with a reference to a Trash Picker game.
+    /// This method should only be called once.
+    /// </summary>
+    ///
+    /// <param name="game">The game instance this view will render.</param>
     public void Setup(TrashPickerGame game)
     {
         // Setup should only be called once
@@ -74,6 +86,22 @@ public class GameView : MonoBehaviour
         hud.ShowTurn(game.Turn, game.MaxTurns);
     }
 
+    /// <summary>
+    /// Renders the game according to the current game state.
+    /// </summary>
+    ///
+    /// <param name="lastAction">
+    /// The last action performed in the game.
+    /// </param>
+    /// <param name="success">
+    /// The success of the last action.
+    /// </param>
+    /// <param name="lastPosition">
+    /// The position of the robot right before the last action.
+    /// </param>
+    /// <param name="targetPosition">
+    /// The last position the robot tried to move to.
+    /// </param>
     public void Draw(RobotAction lastAction, bool success, Position lastPosition,
         Position targetPosition)
     {

@@ -1,3 +1,6 @@
+/// <summary>
+/// A position in a grid.
+/// </summary>
 public struct Position
 {
     public int Row { get; }
