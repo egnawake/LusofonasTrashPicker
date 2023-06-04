@@ -3,7 +3,7 @@
 Trash picking robot game. Second project for the Inteligência Artificial course
 at Universidade Lusófona.
 
-## Autoria
+## Authors and tasks
 
 João Inácio (22202654)
 
@@ -17,13 +17,13 @@ Rodrigo Pires (22103008)
 
 - TODO: tarefas...
 
-## Introdução
+## Introduction
 
 The objective of this project is to identify and understand the positives and negatives of specifically using Naive Bayes Classifier. It is expected that the Ai will perform in an adequate matter sense it will use human gameplay for it's learning data.
 The game itself will be a simple trash colecting game, where the player can always choose between moving on the board, trying to pick up trash or doing something randomly. The game ends when the number of turns reaches 0 at which point the game will tell you how much you scored.
 The article we chose is [Mimicking human strategies in fighting games using a Data Driven Finite State Machine](https://ieeexplore.ieee.org/abstract/document/6030356) where the goal was to achieve human like strategies using both NBC and FSM in a fighting game. What this project will attempt to is to show the strengths of just using NBC alongside a FSM.
 
-## Metodologia
+## Methodology
 
 The project follows an MVC architecture. It is built on the .NET framework and the Unity engine for rendering the game and receiving player input.
 
@@ -45,18 +45,14 @@ An AI that can play the game was built. It uses a machine learning technique - a
 
 Certain game parameters are modifiable on the Unity editor: the dimensions of the game grid, the turn limit and the probability of a cell having trash on it when a map is generated.
 
-## Resultados e discussão
+## Results and discussion
 
 
 
-## Conclusões
+## Conclusions
 
 TODO: conclusoes
 
-## Agradecimentos
-
-TODO: agradecimentos (retirar se nao houver)
-
-## Referências
+## References
 
 - Saini, S., Chung, P. W. H. & Dawson, C. W. (2011). "Mimicking human strategies in fighting games using a Data Driven Finite State Machine". *2011 6th IEEE Joint International Information Technology and Artificial Intelligence Conference*. Chongqing, China, 2011, pp. 389-393, doi: 10.1109/ITAIC.2011.6030356.
