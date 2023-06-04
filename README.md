@@ -59,4 +59,4 @@ TODO: agradecimentos (retirar se nao houver)
 
 ## Referências
 
-TODO: referencias
+- Saini, S., Chung, P. W. H. & Dawson, C. W. (2011). "Mimicking human strategies in fighting games using a Data Driven Finite State Machine". *2011 6th IEEE Joint International Information Technology and Artificial Intelligence Conference*. Chongqing, China, 2011, pp. 389-393, doi: 10.1109/ITAIC.2011.6030356.
