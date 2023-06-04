@@ -15,7 +15,10 @@ João Inácio (22202654)
 
 Rodrigo Pires (22103008)
 
-- TODO: tarefas...
+- Introduction section
+- Results and discussion section
+- Data gathering
+- Conclusions section
 
 ## Introduction
 
@@ -47,8 +50,6 @@ Certain game parameters are modifiable on the Unity editor: the dimensions of th
 
 ## Results and discussion
 
-## Resultados e discussão
-
 During the project the agent was trained with the following data: All human scores were above 80; The highest score was of 90
 Base parameters (6 by 6) grid; 20 turns; 0.4 rate of trash spawn
 - almost never went lower then 80
@@ -60,13 +61,40 @@ Diferent board size (10 by 3) grid; 20 turns; 0.4 rate of trash spawn
 - performed below previous average score
 - tactic used was no longer as effective as previously
 
-Normal board more turns (6 by 6) grid; 26 turns
+Normal board more turns (6 by 6) grid; 26 turns pt.1
 - anomaly was detected where agent would get stuck in the corner
 - average score was slighty higher at 100
 
+pt.2
+- gave agent 2 more human games to attempt to fiz anomaly
+- anomaly was fixed but a new one showed up, similar to previous one (stuck in a different place on the board)
+- agente still managed to beat previous highscore (120)
+
+pt.3
+- gave agent 4 more human games
+- human scored 120
+- previous anomaly fixed and another one was created, again similar to the last
+- agent average score now substancialy lower (around 60)
+
+pt.4
+- gave agent 5 more human games
+- human scored 130
+- agent average increased to 70
+- anomaly fixed, yet once more it came back
+
+More trash (6 by 6) grid; 20 turns; 0.7 rate of trash
+- human highscore of 100
+- human average of 90
+- lowest agent score 39
+- highest agent score 100  
+
+
 ## Conclusions
 
-TODO: conclusoes
+The conclusions found in reference to our results were the following:
+- This method seems to be quite adept in the same environment of it's data but only there if the parameters are the same or similar
+- This method seems to be really good at learning one specific thing and incredibly difficult to make the agent un-learn something
+- This method is limited in it's learning capabilities since it heavely relies on the data it is given
 
 ## References
 
