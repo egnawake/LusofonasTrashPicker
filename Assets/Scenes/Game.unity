@@ -923,8 +923,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fca9c514e1001f4089583321f7dae0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridRows: 10
-  gridColumns: 10
+  gridRows: 5
+  gridColumns: 5
   maxTurns: 20
   trashSpawnChance: 0.4
   gameViewPrefab: {fileID: 5500236453499216363, guid: fde656d382de3284b9ce512440b4a262, type: 3}
@@ -947,8 +947,6 @@ MonoBehaviour:
   - {fileID: 2026381413}
   - {fileID: 1991571486}
   highScoresReturnButton: {fileID: 1989006248}
-  humanIcon: {fileID: 21300000, guid: 27dd01f98fbd507429a91f1a6fe55ffc, type: 3}
-  aiIcon: {fileID: 21300000, guid: e5d9f9e60fd8798479d7f3b98323f2c3, type: 3}
   cameraSlideDuration: 0.5
   cameraSlideCurve:
     serializedVersion: 2
