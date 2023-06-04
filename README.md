@@ -47,7 +47,22 @@ Certain game parameters are modifiable on the Unity editor: the dimensions of th
 
 ## Results and discussion
 
+## Resultados e discussão
 
+During the project the agent was trained with the following data: All human scores were above 80; The highest score was of 90
+Base parameters (6 by 6) grid; 20 turns; 0.4 rate of trash spawn
+- almost never went lower then 80
+- hit the highest score multiple times
+- could not beat the highest score
+-seemed to mostly behave appropriatly
+
+Diferent board size (10 by 3) grid; 20 turns; 0.4 rate of trash spawn
+- performed below previous average score
+- tactic used was no longer as effective as previously
+
+Normal board more turns (6 by 6) grid; 26 turns
+- anomaly was detected where agent would get stuck in the corner
+- average score was slighty higher at 100
 
 ## Conclusions
 
