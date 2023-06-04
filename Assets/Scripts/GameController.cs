@@ -15,12 +15,15 @@ using NaiveBayes;
 public class GameController : MonoBehaviour
 {
     [SerializeField]
+    [Min(1)]
     private int gridRows = 5;
 
     [SerializeField]
+    [Min(1)]
     private int gridColumns = 5;
 
     [SerializeField]
+    [Min(1)]
     private int maxTurns = 20;
 
     [SerializeField]
