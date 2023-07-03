@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GA
 {
@@ -10,6 +11,11 @@ namespace GA
         public Individual(IEnumerable<T> genes)
         {
             Genes = new List<T>(genes);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(',', Genes);
         }
     }
 }
