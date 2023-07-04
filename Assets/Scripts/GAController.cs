@@ -9,10 +9,10 @@ public class GAController : MonoBehaviour
         Random rng = new Random();
 
         GeneticAlgorithm<RobotAction> ga = new GeneticAlgorithm<RobotAction>(
-            100, 5, new RandomEnumGenerator<RobotAction>(243).Generate,
+            100, 20, new RandomEnumGenerator<RobotAction>(243).Generate,
             (Individual<RobotAction> i) => (float)rng.NextDouble() * 3,
-            (Individual<RobotAction>[] i) => i,
-            (Individual<RobotAction>[] i) => i);
+            new SplitBreeder<RobotAction>().Breed,
+            new RandomMutator<RobotAction>(0.1).Mutate);
 
         Debug.Log(ga.Run());
     }
