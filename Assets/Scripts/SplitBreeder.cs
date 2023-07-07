@@ -19,8 +19,8 @@ public class SplitBreeder<T>
         while (childCount < newPop.Length)
         {
             // Choose 2 parents
-            Individual<T> p1 = population[rng.Next(population.Length)];
-            Individual<T> p2 = population[rng.Next(population.Length)];
+            Individual<T> p1 = SelectParent(population);
+            Individual<T> p2 = SelectParent(population);
 
             int splitPoint = rng.Next(population.Length);
 
@@ -52,5 +52,14 @@ public class SplitBreeder<T>
         }
 
         return newPop;
+    }
+
+    private Individual<T> SelectParent(Individual<T>[] population)
+    {
+        Individual<T> ind1 = population[rng.Next(population.Length)];
+        Individual<T> ind2 = population[rng.Next(population.Length)];
+
+        if (ind1.Fitness > ind2.Fitness) return ind1;
+        else return ind2;
     }
 }
