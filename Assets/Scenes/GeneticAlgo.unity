@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 1473571438}
   - component: {fileID: 1473571437}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GAController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -236,6 +236,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d10e9b13be9648841b4f9382beaefc91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  populationSize: 200
+  generations: 10
+  gameRuns: 100
+  mutationChance: 0.1
 --- !u!4 &1473571438
 Transform:
   m_ObjectHideFlags: 0
