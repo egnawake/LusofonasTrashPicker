@@ -6,46 +6,69 @@ using GA;
 public class TrashPickerRunner
 {
     private Random rng;
+    private int runs;
+    private int gridRows;
+    private int gridColumns;
+    private int maxTurns;
+    private float trashProbability;
 
-    public TrashPickerRunner()
+    public TrashPickerRunner(int runs, int gridRows, int gridColumns,
+        int maxTurns, float trashProbability)
     {
         rng = new Random();
+        this.runs = runs;
+        this.gridRows = gridRows;
+        this.gridColumns = gridColumns;
+        this.maxTurns = maxTurns;
+        this.trashProbability = trashProbability;
     }
 
     public float Evaluate(Individual<RobotAction> ind)
     {
-        TrashPickerGame game = new TrashPickerGame(100, 100, 20, 0.3f);
+        int scoreSum = 0;
+
+        for (int i = 0; i < runs; i++)
+        {
+            scoreSum += Play(ind);
+        }
+
+        return scoreSum / runs;
+    }
+
+    private int Play(Individual<RobotAction> strategy)
+    {
+        TrashPickerGame game = new TrashPickerGame(10, 10, 200, 0.3f);
 
         for (int i = 0; i < game.MaxTurns; i++)
         {
             int action = ToKey(game);
 
-            if (ind.Genes[action] == RobotAction.MoveNorth)
+            if (strategy.Genes[action] == RobotAction.MoveNorth)
             {
                 game.MoveRobot(Direction.North);
             }
-            else if (ind.Genes[action] == RobotAction.MoveEast)
+            else if (strategy.Genes[action] == RobotAction.MoveEast)
             {
                 game.MoveRobot(Direction.East);
             }
-            else if (ind.Genes[action] == RobotAction.MoveSouth)
+            else if (strategy.Genes[action] == RobotAction.MoveSouth)
             {
                 game.MoveRobot(Direction.South);
             }
-            else if (ind.Genes[action] == RobotAction.MoveWest)
+            else if (strategy.Genes[action] == RobotAction.MoveWest)
             {
                 game.MoveRobot(Direction.West);
             }
-            else if (ind.Genes[action] == RobotAction.MoveRandom)
+            else if (strategy.Genes[action] == RobotAction.MoveRandom)
             {
                 Direction d = (Direction)rng.Next(Enum.GetNames(typeof(Direction)).Length);
                 game.MoveRobot(d);
             }
-            else if (ind.Genes[action] == RobotAction.SkipTurn)
+            else if (strategy.Genes[action] == RobotAction.SkipTurn)
             {
                 game.SkipTurn();
             }
-            else if (ind.Genes[action] == RobotAction.CollectTrash)
+            else if (strategy.Genes[action] == RobotAction.CollectTrash)
             {
                 game.CollectTrash();
             }
