@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Text;
 using Random = System.Random;
 using UnityEngine;
 using GA;
@@ -37,11 +39,32 @@ public class GAController : MonoBehaviour
         Debug.Log(result.Fitness);
 
         SaveIndividual(result);
+
+        LogResult(result.Fitness);
     }
 
     private void SaveIndividual(Individual<RobotAction> ind)
     {
         string path = Path.Combine(Application.persistentDataPath, "ga_out.txt");
         File.WriteAllText(path, ind.ToString());
+    }
+
+    private void LogResult(float? fitness)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.Append($"[{DateTime.Now}]\n");
+        sb.Append($"Population size: {populationSize}\n");
+        sb.Append($"Generations: {generations}\n");
+        sb.Append($"Mutation chance: {mutationChance}\n");
+        sb.Append($"Game runs: {gameRuns}\n");
+        sb.Append($"Grid size: {gridRows}x{gridColumns}\n");
+        sb.Append($"Max turns: {maxTurns}\n");
+        sb.Append($"Trash probability: {trashProbability}\n");
+        sb.AppendFormat("Fitness: {0}\n", fitness.HasValue ? fitness.Value : "N/A");
+        sb.Append("\n");
+
+        string path = Path.Combine(Application.persistentDataPath, "ga_log.txt");
+        File.AppendAllText(path, sb.ToString());
     }
 }
