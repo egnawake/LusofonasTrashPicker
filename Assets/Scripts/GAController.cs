@@ -1,3 +1,4 @@
+using System.IO;
 using Random = System.Random;
 using UnityEngine;
 using GA;
@@ -13,7 +14,8 @@ public class GAController : MonoBehaviour
     [SerializeField] private int maxTurns = 200;
     [SerializeField] private float trashProbability = 0.2f;
 
-    private int geneNumber = 243;
+    // Total number of game situations
+    private readonly int geneNumber = 243;
 
     private void Start()
     {
@@ -33,5 +35,13 @@ public class GAController : MonoBehaviour
 
         Debug.Log(result);
         Debug.Log(result.Fitness);
+
+        SaveIndividual(result);
+    }
+
+    private void SaveIndividual(Individual<RobotAction> ind)
+    {
+        string path = Path.Combine(Application.persistentDataPath, "ga_out.txt");
+        File.WriteAllText(path, ind.ToString());
     }
 }
