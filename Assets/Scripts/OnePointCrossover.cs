@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using GA;
 
-public class SplitBreeder<T>
+public class OnePointCrossover<T>
 {
     private Random rng;
 
-    public SplitBreeder()
+    public OnePointCrossover()
     {
         rng = new Random();
     }
 
-    public Individual<T>[] Breed(Individual<T>[] population)
+    public Individual<T>[] Cross(Individual<T>[] population)
     {
         Individual<T>[] newPop = new Individual<T>[population.Length];
         int childCount = 0;

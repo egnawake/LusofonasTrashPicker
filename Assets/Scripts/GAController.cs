@@ -30,7 +30,7 @@ public class GAController : MonoBehaviour
             populationSize, generations,
             new RandomEnumGenerator<RobotAction>(geneNumber).Generate,
             runner.Evaluate,
-            new SplitBreeder<RobotAction>().Breed,
+            new OnePointCrossover<RobotAction>().Cross,
             new RandomMutator<RobotAction>(mutationChance).Mutate);
 
         Individual<RobotAction> result = ga.Run();

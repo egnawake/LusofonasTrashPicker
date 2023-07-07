@@ -9,7 +9,7 @@ namespace GA
         private Individual<T>[] population;
         private Func<Individual<T>> generator;
         private Func<Individual<T>, float> evaluator;
-        private Func<Individual<T>[], Individual<T>[]> breeder;
+        private Func<Individual<T>[], Individual<T>[]> crosser;
         private Func<Individual<T>[], Individual<T>[]> mutator;
         private float bestFitness;
         private Individual<T> bestIndividual;
@@ -17,14 +17,14 @@ namespace GA
         public GeneticAlgorithm(int populationSize, int maxGenerations,
             Func<Individual<T>> generator,
             Func<Individual<T>, float> evaluator,
-            Func<Individual<T>[], Individual<T>[]> breeder,
+            Func<Individual<T>[], Individual<T>[]> crosser,
             Func<Individual<T>[], Individual<T>[]> mutator)
         {
             this.populationSize = populationSize;
             this.maxGenerations = maxGenerations;
             this.generator = generator;
             this.evaluator = evaluator;
-            this.breeder = breeder;
+            this.crosser = crosser;
             this.mutator = mutator;
 
             population = new Individual<T>[populationSize];
@@ -54,7 +54,7 @@ namespace GA
                 }
 
                 // Mating
-                Individual<T>[] newPopulation = breeder.Invoke(population);
+                Individual<T>[] newPopulation = crosser.Invoke(population);
 
                 // Mutation
                 newPopulation = mutator.Invoke(newPopulation);
