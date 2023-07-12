@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace GA
 {
@@ -13,12 +14,14 @@ namespace GA
         private Func<Individual<T>[], Individual<T>[]> mutator;
         private float bestFitness;
         private Individual<T> bestIndividual;
+        private IList<string> log;
 
         public GeneticAlgorithm(int populationSize, int maxGenerations,
             Func<Individual<T>> generator,
             Func<Individual<T>, float> evaluator,
             Func<Individual<T>[], Individual<T>[]> crosser,
-            Func<Individual<T>[], Individual<T>[]> mutator)
+            Func<Individual<T>[], Individual<T>[]> mutator,
+            IList<string> log)
         {
             this.populationSize = populationSize;
             this.maxGenerations = maxGenerations;
@@ -26,6 +29,7 @@ namespace GA
             this.evaluator = evaluator;
             this.crosser = crosser;
             this.mutator = mutator;
+            this.log = log;
 
             population = new Individual<T>[populationSize];
             bestFitness = float.MinValue;
@@ -53,7 +57,9 @@ namespace GA
                     }
                 }
 
-                // Mating
+                log.Add($"{bestFitness}");
+
+                // Crossover
                 Individual<T>[] newPopulation = crosser.Invoke(population);
 
                 // Mutation

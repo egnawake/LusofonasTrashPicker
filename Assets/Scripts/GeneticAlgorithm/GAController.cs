@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 using Random = System.Random;
 using UnityEngine;
 using GA;
@@ -23,6 +24,8 @@ public class GAController : MonoBehaviour
     {
         Random rng = new Random();
 
+        IList<string> log = new List<string>();
+
         TrashPickerRunner runner = new TrashPickerRunner(gameRuns, gridRows,
             gridColumns, maxTurns, trashProbability);
 
@@ -31,16 +34,14 @@ public class GAController : MonoBehaviour
             new RandomEnumGenerator<RobotAction>(geneNumber).Generate,
             runner.Evaluate,
             new OnePointCrossover<RobotAction>().Cross,
-            new RandomMutator<RobotAction>(mutationChance).Mutate);
+            new RandomMutator<RobotAction>(mutationChance).Mutate,
+            log);
 
         Individual<RobotAction> result = ga.Run();
 
-        Debug.Log(result);
-        Debug.Log(result.Fitness);
-
         SaveIndividual(result);
-
         LogResult(result.Fitness);
+        LogIterations(log);
     }
 
     private void SaveIndividual(Individual<RobotAction> ind)
@@ -66,5 +67,13 @@ public class GAController : MonoBehaviour
 
         string path = Path.Combine(Application.persistentDataPath, "ga_log.txt");
         File.AppendAllText(path, sb.ToString());
+    }
+
+    private void LogIterations(IEnumerable<string> log)
+    {
+        string date = DateTime.Now.ToString("yyyy-MM-dd_HH-mm");
+        string path = Path.Combine(Application.persistentDataPath,
+            $"ga_iter_{date}.txt");
+        File.WriteAllText(path, string.Join(",", log));
     }
 }
