@@ -25,7 +25,8 @@ public class RandomMutator<T>
                 double roll = rng.NextDouble();
                 if (roll < mutateProb)
                 {
-                    int geneValue = rng.Next(Enum.GetNames(typeof(T)).Length);
+                    int max = Enum.GetNames(typeof(T)).Length;
+                    int geneValue = rng.Next(1, max);
                     T gene = (T)Enum.ToObject(typeof(T), geneValue);
 
                     ind.Genes[j] = gene;
