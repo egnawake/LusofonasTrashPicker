@@ -64,6 +64,8 @@ namespace GA
 
                 // Mutation
                 newPopulation = mutator.Invoke(newPopulation);
+
+                population = newPopulation;
             }
 
             return bestIndividual;
