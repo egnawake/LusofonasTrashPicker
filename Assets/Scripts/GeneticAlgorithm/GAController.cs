@@ -37,10 +37,12 @@ public class GAController : MonoBehaviour
             new RandomMutator<RobotAction>(mutationChance).Mutate,
             log);
 
+        DateTime start = DateTime.Now;
         Individual<RobotAction> result = ga.Run();
+        TimeSpan time = DateTime.Now - start;
 
         SaveIndividual(result);
-        LogResult(result.Fitness);
+        LogResult(result.Fitness, time);
         LogIterations(log);
     }
 
@@ -50,7 +52,7 @@ public class GAController : MonoBehaviour
         File.WriteAllText(path, ind.ToString());
     }
 
-    private void LogResult(float? fitness)
+    private void LogResult(float? fitness, TimeSpan time)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -63,6 +65,7 @@ public class GAController : MonoBehaviour
         sb.Append($"Max turns: {maxTurns}\n");
         sb.Append($"Trash probability: {trashProbability}\n");
         sb.AppendFormat("Fitness: {0}\n", fitness.HasValue ? fitness.Value : "N/A");
+        sb.Append($"Time: {time.ToString()}");
         sb.Append("\n");
 
         string path = Path.Combine(Application.persistentDataPath, "ga_log.txt");

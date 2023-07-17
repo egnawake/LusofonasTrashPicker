@@ -238,12 +238,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   populationSize: 200
   generations: 1000
-  mutationChance: 0.2
+  mutationChance: 0.05
   gameRuns: 100
   gridRows: 5
   gridColumns: 5
-  maxTurns: 200
-  trashProbability: 0.2
+  maxTurns: 20
+  trashProbability: 0.5
 --- !u!4 &1473571438
 Transform:
   m_ObjectHideFlags: 0
