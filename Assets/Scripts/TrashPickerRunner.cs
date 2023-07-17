@@ -37,7 +37,8 @@ public class TrashPickerRunner
 
     private int Play(Individual<RobotAction> strategy)
     {
-        TrashPickerGame game = new TrashPickerGame(10, 10, 200, 0.3f);
+        TrashPickerGame game = new TrashPickerGame(gridRows, gridColumns,
+            maxTurns, trashProbability);
 
         for (int i = 0; i < game.MaxTurns; i++)
         {
