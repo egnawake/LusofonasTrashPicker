@@ -1,7 +1,7 @@
 using System;
 using GA;
 
-public class RandomMutator<T>
+public class RandomMutator<T> where T : Enum
 {
     private Random rng;
     private double mutateProb;
