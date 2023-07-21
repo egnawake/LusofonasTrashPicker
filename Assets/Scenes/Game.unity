@@ -927,8 +927,8 @@ MonoBehaviour:
   gridRows: 5
   gridColumns: 5
   maxTurns: 20
-  trashSpawnChance: 0.4
-  strategyFileName: ga_out_2023-07-19_12-40.txt
+  trashSpawnChance: 0.5
+  strategyPath: ga_2023-07-21_17-44
   gameViewPrefab: {fileID: 5500236453499216363, guid: fde656d382de3284b9ce512440b4a262, type: 3}
   mainMenu: {fileID: 1639409996}
   newHumanGameButton: {fileID: 8803625555108931185}

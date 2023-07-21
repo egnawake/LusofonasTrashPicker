@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour
     [Range(0, 1f)]
     private float trashSpawnChance = 0.4f;
 
-    [SerializeField] private string strategyFileName;
+    [SerializeField] private string strategyPath;
 
     [SerializeField] private GameView gameViewPrefab;
 
@@ -139,7 +139,7 @@ public class GameController : MonoBehaviour
     private void InitializeGAPlayer()
     {
         string s = File.ReadAllText(
-            Path.Combine(Application.persistentDataPath, strategyFileName));
+            Path.Combine(Application.persistentDataPath, strategyPath, "strategy.txt"));
 
         strategy = s.Split(',')
             .Select((string s) => (RobotAction)Enum.Parse(typeof(RobotAction), s))
@@ -229,7 +229,20 @@ public class GameController : MonoBehaviour
 
     private void GAAction()
     {
-        RobotAction action = strategy[GetGAStrategyKey(game)];
+        int actionIndex = GetGAStrategyKey(game);
+
+        RobotAction action = strategy[actionIndex];
+
+        IList<CellState> states = new List<CellState>
+        {
+            game.CellAt(game.RobotPosition),
+            game.CellAt(game.RobotPosition + new Position(-1, 0)),
+            game.CellAt(game.RobotPosition + new Position(0, 1)),
+            game.CellAt(game.RobotPosition + new Position(1, 0)),
+            game.CellAt(game.RobotPosition + new Position(0, -1))
+        };
+
+        Debug.Log($"Action at {actionIndex} - {action} - {string.Join(' ', states)}");
 
         DoAction(action);
 

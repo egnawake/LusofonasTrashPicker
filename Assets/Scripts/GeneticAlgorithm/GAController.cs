@@ -24,7 +24,7 @@ public class GAController : MonoBehaviour
     {
         Random rng = new Random();
 
-        IList<string> log = new List<string>();
+        IList<string> evolutionLog = new List<string>();
 
         TrashPickerRunner runner = new TrashPickerRunner(gameRuns, gridRows,
             gridColumns, maxTurns, trashProbability);
@@ -35,28 +35,23 @@ public class GAController : MonoBehaviour
             runner.Evaluate,
             new OnePointCrossover<RobotAction>().Cross,
             new RandomMutator<RobotAction>(mutationChance).Mutate,
-            log);
+            evolutionLog);
 
         DateTime start = DateTime.Now;
         Individual<RobotAction> result = ga.Run();
         TimeSpan time = DateTime.Now - start;
 
-        SaveIndividual(result);
-        LogResult(result.Fitness, time);
-        LogIterations(log);
+        Log(result, time, evolutionLog);
     }
 
-    private void SaveIndividual(Individual<RobotAction> ind)
+    private void Log(Individual<RobotAction> ind, TimeSpan time,
+        IEnumerable<string> log)
     {
-        string path = Path.Combine(Application.persistentDataPath, "ga_out.txt");
-        File.WriteAllText(path, ind.ToString());
-    }
+        string date = DateTime.Now.ToString("yyyy-MM-dd_HH-mm");
+        string dirPath = Path.Combine(Application.persistentDataPath, $"ga_{date}");
+        DirectoryInfo dir = Directory.CreateDirectory(dirPath);
 
-    private void LogResult(float? fitness, TimeSpan time)
-    {
         StringBuilder sb = new StringBuilder();
-
-        sb.Append($"[{DateTime.Now}]\n");
         sb.Append($"Population size: {populationSize}\n");
         sb.Append($"Generations: {generations}\n");
         sb.Append($"Mutation chance: {mutationChance}\n");
@@ -64,19 +59,16 @@ public class GAController : MonoBehaviour
         sb.Append($"Grid size: {gridRows}x{gridColumns}\n");
         sb.Append($"Max turns: {maxTurns}\n");
         sb.Append($"Trash probability: {trashProbability}\n");
-        sb.AppendFormat("Fitness: {0}\n", fitness.HasValue ? fitness.Value : "N/A");
-        sb.Append($"Time: {time.ToString()}");
+        sb.AppendFormat("Fitness: {0}\n", ind.Fitness.HasValue ? ind.Fitness.Value : "N/A");
+        sb.Append($"Time: {time.ToString()}\n");
+        sb.Append("\n");
+        sb.Append(string.Join(',', log));
         sb.Append("\n");
 
-        string path = Path.Combine(Application.persistentDataPath, "ga_log.txt");
-        File.AppendAllText(path, sb.ToString());
-    }
+        string filePath = Path.Combine(dir.FullName, "info.txt");
+        File.WriteAllText(filePath, sb.ToString());
 
-    private void LogIterations(IEnumerable<string> log)
-    {
-        string date = DateTime.Now.ToString("yyyy-MM-dd_HH-mm");
-        string path = Path.Combine(Application.persistentDataPath,
-            $"ga_iter_{date}.txt");
-        File.WriteAllText(path, string.Join(",", log));
+        filePath = Path.Combine(dir.FullName, "strategy.txt");
+        File.WriteAllText(filePath, ind.ToString());
     }
 }

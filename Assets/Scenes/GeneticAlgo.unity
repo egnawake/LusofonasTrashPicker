@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   populationSize: 200
-  generations: 100
+  generations: 200
   mutationChance: 0.05
   gameRuns: 100
   gridRows: 5
