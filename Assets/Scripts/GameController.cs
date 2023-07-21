@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,12 +33,15 @@ public class GameController : MonoBehaviour
     [Range(0, 1f)]
     private float trashSpawnChance = 0.4f;
 
+    [SerializeField] private string strategyFileName;
+
     [SerializeField] private GameView gameViewPrefab;
 
     // Main menu fields
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private Button newHumanGameButton;
     [SerializeField] private Button newAIGameButton;
+    [SerializeField] private Button newGAGameButton;
     [SerializeField] private Button highScoresButton;
     [SerializeField] private Button quitButton;
 
@@ -68,8 +73,11 @@ public class GameController : MonoBehaviour
 
     private bool isAI = false;
     private bool aiPaused = false;
+    private string playerType = "human";
     private NaiveBayesClassifier nbClassifier;
     private Attrib centerCell, northCell, eastCell, southCell, westCell;
+
+    private RobotAction[] strategy;
 
 
     private void Start()
@@ -91,6 +99,8 @@ public class GameController : MonoBehaviour
         }
 
         InitializeAI();
+
+        InitializeGAPlayer();
     }
 
     private void InitializeAI()
@@ -124,6 +134,16 @@ public class GameController : MonoBehaviour
                 southCell,
                 westCell
             });
+    }
+
+    private void InitializeGAPlayer()
+    {
+        string s = File.ReadAllText(
+            Path.Combine(Application.persistentDataPath, strategyFileName));
+
+        strategy = s.Split(',')
+            .Select((string s) => (RobotAction)Enum.Parse(typeof(RobotAction), s))
+            .ToArray();
     }
 
     private void PlayerAction()
@@ -207,6 +227,16 @@ public class GameController : MonoBehaviour
         StartCoroutine(AIPauseTimer());
     }
 
+    private void GAAction()
+    {
+        RobotAction action = strategy[GetGAStrategyKey(game)];
+
+        DoAction(action);
+
+        aiPaused = true;
+        StartCoroutine(AIPauseTimer());
+    }
+
     private void DoAction(RobotAction action)
     {
         Position lastPosition = game.RobotPosition;
@@ -250,15 +280,20 @@ public class GameController : MonoBehaviour
 
     private void StartHumanGame()
     {
-        StartGame(false);
+        StartGame("human");
     }
 
     private void StartAIGame()
     {
-        StartGame(true);
+        StartGame("bayes");
     }
 
-    private void StartGame(bool isAI)
+    private void StartGAGame()
+    {
+        StartGame("genetic");
+    }
+
+    private void StartGame(string playerType)
     {
         mainMenu.SetActive(false);
 
@@ -270,7 +305,7 @@ public class GameController : MonoBehaviour
         gameView = Instantiate(gameViewPrefab);
         gameView.Setup(game);
 
-        this.isAI = isAI;
+        this.playerType = playerType;
 
         // Activate camera movement
         if (cameraMovement != null)
@@ -377,6 +412,7 @@ public class GameController : MonoBehaviour
     {
         newHumanGameButton.onClick.AddListener(StartHumanGame);
         newAIGameButton.onClick.AddListener(StartAIGame);
+        newGAGameButton.onClick.AddListener(StartGAGame);
         highScoresButton.onClick.AddListener(ShowHighScores);
         quitButton.onClick.AddListener(Quit);
         gameOverReturnButton.onClick.AddListener(OpenMainMenu);
@@ -399,13 +435,17 @@ public class GameController : MonoBehaviour
         {
             if (!gameView.Animating)
             {
-                if (!isAI)
+                if (playerType == "human")
                 {
                     PlayerAction();
                 }
-                else if (!aiPaused)
+                else if (!aiPaused && playerType == "bayes")
                 {
                     AIAction();
+                }
+                else if (!aiPaused && playerType == "genetic")
+                {
+                    GAAction();
                 }
             }
 
@@ -434,5 +474,25 @@ public class GameController : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private int GetGAStrategyKey(TrashPickerGame game)
+    {
+        IList<CellState> states = new List<CellState>
+        {
+            game.CellAt(game.RobotPosition),
+            game.CellAt(game.RobotPosition + new Position(-1, 0)),
+            game.CellAt(game.RobotPosition + new Position(0, 1)),
+            game.CellAt(game.RobotPosition + new Position(1, 0)),
+            game.CellAt(game.RobotPosition + new Position(0, -1))
+        };
+
+        int key = 0;
+        for (int i = 0; i < states.Count; i++)
+        {
+            key = key + (int)states[i] * (int)Math.Pow(3, i);
+        }
+
+        return key;
     }
 }
