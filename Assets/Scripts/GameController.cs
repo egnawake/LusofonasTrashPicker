@@ -78,6 +78,7 @@ public class GameController : MonoBehaviour
     private Attrib centerCell, northCell, eastCell, southCell, westCell;
 
     private RobotAction[] strategy;
+    private SessionLogger sessionLogger;
 
 
     private void Start()
@@ -101,6 +102,8 @@ public class GameController : MonoBehaviour
         InitializeAI();
 
         InitializeGAPlayer();
+
+        sessionLogger = new SessionLogger();
     }
 
     private void InitializeAI()
@@ -464,6 +467,8 @@ public class GameController : MonoBehaviour
 
             yield return null;
         }
+
+        sessionLogger.Log(playerType, game);
     }
 
     private IEnumerator AIPauseTimer()
