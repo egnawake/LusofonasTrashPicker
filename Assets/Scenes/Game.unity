@@ -924,11 +924,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fca9c514e1001f4089583321f7dae0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridRows: 5
-  gridColumns: 5
-  maxTurns: 20
+  gridRows: 10
+  gridColumns: 10
+  maxTurns: 200
   trashSpawnChance: 0.5
-  strategyPath: ga_2023-07-21_17-44
+  strategyPath: ga_2023-07-21_20-51
   gameViewPrefab: {fileID: 5500236453499216363, guid: fde656d382de3284b9ce512440b4a262, type: 3}
   mainMenu: {fileID: 1639409996}
   newHumanGameButton: {fileID: 8803625555108931185}
