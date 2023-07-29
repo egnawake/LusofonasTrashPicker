@@ -36,14 +36,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private string strategyPath;
 
     [SerializeField] private GameView gameViewPrefab;
-
-    // Main menu fields
-    [SerializeField] private GameObject mainMenu;
-    [SerializeField] private Button newHumanGameButton;
-    [SerializeField] private Button newAIGameButton;
-    [SerializeField] private Button newGAGameButton;
-    [SerializeField] private Button highScoresButton;
-    [SerializeField] private Button quitButton;
+    [SerializeField] private MainMenuController mainMenuControllerPrefab;
 
     // Game over screen fields
     [SerializeField] private GameObject gameOverScreen;
@@ -51,11 +44,6 @@ public class GameController : MonoBehaviour
     [SerializeField] private TMP_Text gameOverScoreText;
     [SerializeField] private TMP_Text gameOverHighScoreText;
     [SerializeField] private Button gameOverReturnButton;
-
-    // High scores screen fields
-    [SerializeField] private GameObject highScoresScreen;
-    [SerializeField] private HighScoreEntry[] highScoreEntries;
-    [SerializeField] private Button highScoresReturnButton;
 
     // Camera animation fields
     [SerializeField] private float cameraSlideDuration = 1f;
@@ -67,6 +55,7 @@ public class GameController : MonoBehaviour
     private Camera mainCamera;
     private CameraMovement cameraMovement;
     private TrashPickerGame game;
+    private MainMenuController mainMenuController;
     private GameView gameView;
 
     private List<HighScore> highScores;
@@ -94,16 +83,15 @@ public class GameController : MonoBehaviour
 
         highScores = new List<HighScore>();
 
-        foreach (HighScoreEntry entry in highScoreEntries)
-        {
-            entry.Clear();
-        }
-
         InitializeAI();
 
         InitializeGAPlayer();
 
         sessionLogger = new SessionLogger();
+
+        mainMenuController = GetComponent<MainMenuController>();
+        mainMenuController.GameStarted += StartGame;
+        mainMenuController.HighScores = highScores;
     }
 
     private void InitializeAI()
@@ -311,8 +299,6 @@ public class GameController : MonoBehaviour
 
     private void StartGame(string playerType)
     {
-        mainMenu.SetActive(false);
-
         // Initialize game with parameters from the Unity inspector
         game = new TrashPickerGame(gridRows, gridColumns, maxTurns,
             trashSpawnChance);
@@ -348,7 +334,7 @@ public class GameController : MonoBehaviour
         gameOverScreen.SetActive(true);
         gameOverScoreText.text = game.Score.ToString();
 
-        int placement = AddHighScore(new HighScore(game.Score, isAI));
+        int placement = AddHighScore(new HighScore(game.Score, playerType == "bayes"));
 
         if (placement > 0)
         {
@@ -357,13 +343,6 @@ public class GameController : MonoBehaviour
         }
 
         gameOverHighScoreDisplay.SetActive(showHighScore);
-    }
-
-    private void ShowHighScores()
-    {
-        mainMenu.SetActive(false);
-
-        highScoresScreen.SetActive(true);
     }
 
     private int AddHighScore(HighScore highScore)
@@ -401,48 +380,24 @@ public class GameController : MonoBehaviour
             highScores.RemoveAt(highScores.Count - 1);
         }
 
-        // Update view with current score list
-        for (int i = 0; i < highScores.Count; i++)
-        {
-            highScoreEntries[i].Score = highScores[i].Score;
-            highScoreEntries[i].AIScore = highScores[i].PlayedByAI;
-        }
-
         return placement;
     }
 
     private void OpenMainMenu()
     {
         gameOverScreen.SetActive(false);
-        highScoresScreen.SetActive(false);
 
         if (gameView != null)
         {
             Destroy(gameView.gameObject);
         }
 
-        mainMenu.SetActive(true);
+        mainMenuController.Open();
     }
 
     private void AttachButtonListeners()
     {
-        newHumanGameButton.onClick.AddListener(StartHumanGame);
-        newAIGameButton.onClick.AddListener(StartAIGame);
-        newGAGameButton.onClick.AddListener(StartGAGame);
-        highScoresButton.onClick.AddListener(ShowHighScores);
-        quitButton.onClick.AddListener(Quit);
         gameOverReturnButton.onClick.AddListener(OpenMainMenu);
-        highScoresReturnButton.onClick.AddListener(OpenMainMenu);
-    }
-
-    private void Quit()
-    {
-#if UNITY_STANDALONE
-        Application.Quit();
-#endif
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
     }
 
     private IEnumerator PlayGame()
