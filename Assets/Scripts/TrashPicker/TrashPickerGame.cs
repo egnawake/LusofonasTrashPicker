@@ -154,11 +154,22 @@ public class TrashPickerGame
             _ => throw new ArgumentException("Invalid direction")
         };
 
-        // If robot would hit a wall, movement fails and score is reduced
-        if (IsPositionIllegal(TargetPosition))
+        // If robot would hit a wall, wrap around position
+        if (TargetPosition.Row < 0)
         {
-            score -= 5;
-            return false;
+            TargetPosition = new Position(Rows - 1, TargetPosition.Col);
+        }
+        else if (TargetPosition.Row >= Rows)
+        {
+            TargetPosition = new Position(0, TargetPosition.Col);
+        }
+        else if (TargetPosition.Col < 0)
+        {
+            TargetPosition = new Position(TargetPosition.Row, Cols - 1);
+        }
+        else if (TargetPosition.Col >= Cols)
+        {
+            TargetPosition = new Position(TargetPosition.Row, 0);
         }
 
         robotPosition = TargetPosition;
