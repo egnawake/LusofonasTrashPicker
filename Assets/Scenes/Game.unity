@@ -618,7 +618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridRows: 10
   gridColumns: 10
-  maxTurns: 5
+  maxTurns: 20
   trashSpawnChance: 0.5
   strategyPath: ga_2023-07-21_20-51
   gameViewPrefab: {fileID: 5500236453499216363, guid: fde656d382de3284b9ce512440b4a262, type: 3}
@@ -891,7 +891,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -965,20 +964,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 60.79, y: 0, z: 0}
---- !u!114 &963194229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55452861621003d459bc537d2824e418, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
-  maxSpeed: 15
 --- !u!1 &1147333565
 GameObject:
   m_ObjectHideFlags: 0

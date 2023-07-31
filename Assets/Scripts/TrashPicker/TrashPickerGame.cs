@@ -57,6 +57,11 @@ public class TrashPickerGame
     public Position TargetPosition { get; private set; }
 
     /// <summary>
+    /// Direction for the last move action performed.
+    /// </summary>
+    public Direction MovementDirection { get; private set; }
+
+    /// <summary>
     /// Indicates whether the game has ended.
     /// </summary>
     public bool GameOver => turn >= maxTurns;
@@ -112,18 +117,8 @@ public class TrashPickerGame
     /// </returns>
     public CellState CellAt(Position pos)
     {
-        if (IsPositionIllegal(pos))
-        {
-            return CellState.Wall;
-        }
-        else if (IsCellVisible(pos))
-        {
-            return (CellState)grid[pos.Row, pos.Col];
-        }
-        else
-        {
-            return CellState.Hidden;
-        }
+        pos = WrapPosition(pos);
+        return (CellState)grid[pos.Row, pos.Col];
     }
 
     /// <summary>
@@ -144,8 +139,10 @@ public class TrashPickerGame
 
         turn++;
 
+        MovementDirection = dir;
+
         // Convert direction to target position
-        TargetPosition = robotPosition + dir switch
+        Position pos = robotPosition + dir switch
         {
             Direction.North => new Position(-1, 0),
             Direction.East => new Position(0, 1),
@@ -155,23 +152,9 @@ public class TrashPickerGame
         };
 
         // If robot would hit a wall, wrap around position
-        if (TargetPosition.Row < 0)
-        {
-            TargetPosition = new Position(Rows - 1, TargetPosition.Col);
-        }
-        else if (TargetPosition.Row >= Rows)
-        {
-            TargetPosition = new Position(0, TargetPosition.Col);
-        }
-        else if (TargetPosition.Col < 0)
-        {
-            TargetPosition = new Position(TargetPosition.Row, Cols - 1);
-        }
-        else if (TargetPosition.Col >= Cols)
-        {
-            TargetPosition = new Position(TargetPosition.Row, 0);
-        }
+        pos = WrapPosition(pos);
 
+        TargetPosition = pos;
         robotPosition = TargetPosition;
 
         return true;
@@ -220,6 +203,28 @@ public class TrashPickerGame
     private void SetCell(Position pos, InternalCellState state)
     {
         grid[pos.Row, pos.Col] = state;
+    }
+
+    private Position WrapPosition(Position pos)
+    {
+        if (pos.Row < 0)
+        {
+            return new Position(Rows - 1, pos.Col);
+        }
+        else if (pos.Row >= Rows)
+        {
+            return new Position(0, pos.Col);
+        }
+        else if (pos.Col < 0)
+        {
+            return new Position(pos.Row, Cols - 1);
+        }
+        else if (pos.Col >= Cols)
+        {
+            return new Position(pos.Row, 0);
+        }
+
+        return pos;
     }
 
     private bool IsPositionIllegal(Position p)

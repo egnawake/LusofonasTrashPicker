@@ -48,7 +48,7 @@ public class GameView : MonoBehaviour
     [SerializeField] private GameObject trashPickupEffectPrefab;
 
 
-    private CellView[,] cellObjects;
+    private CellView[] cellObjects;
     private GameObject robot;
     private HUD hud;
 
@@ -115,21 +115,18 @@ public class GameView : MonoBehaviour
 
     private void InitializeCellGrid()
     {
-        cellObjects = new CellView[game.Rows, game.Cols];
+        cellObjects = new CellView[5];
 
-        for (int i = 0; i < game.Rows; i++)
-        {
-            for (int j = 0; j < game.Cols; j++)
-            {
-                CellView cellObject = Instantiate(cellPrefab, transform);
-
-                cellObject.name = $"CellObject({i}, {j})";
-                cellObject.transform.position = CellToWorldPosition(
-                    new Position(i, j));
-
-                cellObjects[i, j] = cellObject;
-            }
-        }
+        cellObjects[0] = Instantiate(cellPrefab, transform);
+        cellObjects[0].transform.position = CellToWorldPosition(new Position(0, 0));
+        cellObjects[1] = Instantiate(cellPrefab, transform);
+        cellObjects[1].transform.position = CellToWorldPosition(new Position(-1, 0));
+        cellObjects[2] = Instantiate(cellPrefab, transform);
+        cellObjects[2].transform.position = CellToWorldPosition(new Position(0, 1));
+        cellObjects[3] = Instantiate(cellPrefab, transform);
+        cellObjects[3].transform.position = CellToWorldPosition(new Position(1, 0));
+        cellObjects[4] = Instantiate(cellPrefab, transform);
+        cellObjects[4].transform.position = CellToWorldPosition(new Position(0, -1));
     }
 
     private void InitializeRobot()
@@ -151,13 +148,11 @@ public class GameView : MonoBehaviour
     private void DrawCells()
     {
         // Update cell states
-        for (int i = 0; i < game.Rows; i++)
-        {
-            for (int j = 0; j < game.Cols; j++)
-            {
-                cellObjects[i, j].SetState(game.CellAt(new Position(i, j)));
-            }
-        }
+        cellObjects[0].SetState(game.CellAt(game.RobotPosition));
+        cellObjects[1].SetState(game.CellAt(game.RobotPosition + new Position(-1, 0)));
+        cellObjects[2].SetState(game.CellAt(game.RobotPosition + new Position(0, 1)));
+        cellObjects[3].SetState(game.CellAt(game.RobotPosition + new Position(1, 0)));
+        cellObjects[4].SetState(game.CellAt(game.RobotPosition + new Position(0, -1)));
     }
 
     private void DrawRobot(RobotAction lastAction, bool success,
@@ -174,28 +169,22 @@ public class GameView : MonoBehaviour
             Vector3 start = CellToWorldPosition(lastPosition);
             Vector3 end = CellToWorldPosition(targetPosition);
 
-            // If movement was successful, animate robot from last position
-            // to new position
-            if (success)
-            {
-                robot.transform.rotation = Quaternion.LookRotation(
-                    end - start);
-                StartCoroutine(AnimateRobotMovement(start, end, robotMoveCurve,
-                    robotMoveDuration));
-            }
-            // If movement was not successful, animate robot bumping into a wall
-            else
-            {
-                robot.transform.rotation = Quaternion.LookRotation(
-                    end - start);
-                StartCoroutine(AnimateRobotMovement(start, end, robotBumpCurve,
-                    robotMoveDuration));
-            }
+            // Turn robot to face movement direction
+            Quaternion rot = Quaternion.LookRotation(
+                game.MovementDirection switch
+                {
+                    Direction.North => Vector3.forward,
+                    Direction.East => Vector3.right,
+                    Direction.South => Vector3.back,
+                    Direction.West => Vector3.left,
+                    _ => throw new ArgumentException("Invalid direction")
+                });
+            robot.transform.rotation = rot;
         }
         else if (lastAction == RobotAction.SkipTurn)
         {
             // Perform skip turn animation
-            Vector3 start = CellToWorldPosition(game.RobotPosition);
+            Vector3 start = CellToWorldPosition(new Position(0, 0));
             Vector3 end = start + Vector3.up * 1.2f;
             StartCoroutine(AnimateRobotMovement(start, end, robotSkipTurnCurve,
                 robotMoveDuration));
@@ -203,7 +192,7 @@ public class GameView : MonoBehaviour
         else if (lastAction == RobotAction.CollectTrash)
         {
             // Perform collect trash animation
-            Vector3 start = CellToWorldPosition(game.RobotPosition);
+            Vector3 start = CellToWorldPosition(new Position(0, 0));
             Vector3 end = start + robot.transform.rotation * Vector3.right * 1.2f;
             StartCoroutine(AnimateRobotMovement(start, end, robotCollectTrashCurve,
                 robotCollectTrashDuration));
@@ -216,7 +205,7 @@ public class GameView : MonoBehaviour
         if (lastAction == RobotAction.CollectTrash && success)
         {
             Instantiate(trashPickupEffectPrefab,
-                CellToWorldPosition(game.RobotPosition),
+                CellToWorldPosition(new Position(0, 0)),
                 Quaternion.identity);
         }
     }
