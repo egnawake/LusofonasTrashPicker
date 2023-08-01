@@ -106,6 +106,12 @@ public class TrashPickerGame
         this.scoreConfig = scoreConfig;
     }
 
+    public TrashPickerGame(int rows, int cols, double trashSpawnChance,
+        ScoreConfig scoreConfig) : this(rows, cols, CalculateMaxTurns(rows),
+        trashSpawnChance, scoreConfig)
+    {
+    }
+
     /// <summary>
     /// Indicates what the state of the cell at <paramref name="pos" /> is.
     /// </summary>
@@ -204,6 +210,12 @@ public class TrashPickerGame
         score += scoreConfig.CollectedTrash;
 
         return true;
+    }
+
+    private static int CalculateMaxTurns(int rows)
+    {
+        // p=L^2-(L/2)^2
+        return rows * rows - ((rows / 2) * (rows / 2));
     }
 
     private void SetCell(Position pos, InternalCellState state)

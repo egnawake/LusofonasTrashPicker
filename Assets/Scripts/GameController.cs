@@ -302,8 +302,8 @@ public class GameController : MonoBehaviour
     private void StartGame(string playerType)
     {
         // Initialize game with parameters from the Unity inspector
-        game = new TrashPickerGame(gridRows, gridColumns, maxTurns,
-            trashSpawnChance, scoreConfigSO.ToScoreConfig());
+        game = new TrashPickerGame(gridRows, gridColumns, trashSpawnChance,
+            scoreConfigSO.ToScoreConfig());
 
         // Instantiate a view object and pass it the game
         gameView = Instantiate(gameViewPrefab);
