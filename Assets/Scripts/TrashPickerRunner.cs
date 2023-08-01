@@ -11,9 +11,10 @@ public class TrashPickerRunner
     private int gridColumns;
     private int maxTurns;
     private float trashProbability;
+    private ScoreConfig scoreConfig;
 
     public TrashPickerRunner(int runs, int gridRows, int gridColumns,
-        int maxTurns, float trashProbability)
+        int maxTurns, float trashProbability, ScoreConfig scoreConfig)
     {
         rng = new Random();
         this.runs = runs;
@@ -21,6 +22,7 @@ public class TrashPickerRunner
         this.gridColumns = gridColumns;
         this.maxTurns = maxTurns;
         this.trashProbability = trashProbability;
+        this.scoreConfig = scoreConfig;
     }
 
     public float Evaluate(Individual<RobotAction> ind)
@@ -38,7 +40,7 @@ public class TrashPickerRunner
     private int Play(Individual<RobotAction> strategy)
     {
         TrashPickerGame game = new TrashPickerGame(gridRows, gridColumns,
-            maxTurns, trashProbability);
+            maxTurns, trashProbability, scoreConfig);
 
         for (int i = 0; i < game.MaxTurns; i++)
         {

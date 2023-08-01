@@ -35,6 +35,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private string strategyPath;
 
+    [SerializeField] private ScoreConfigSO scoreConfigSO;
+
     [SerializeField] private GameView gameViewPrefab;
     [SerializeField] private MainMenuController mainMenuControllerPrefab;
 
@@ -301,7 +303,7 @@ public class GameController : MonoBehaviour
     {
         // Initialize game with parameters from the Unity inspector
         game = new TrashPickerGame(gridRows, gridColumns, maxTurns,
-            trashSpawnChance);
+            trashSpawnChance, scoreConfigSO.ToScoreConfig());
 
         // Instantiate a view object and pass it the game
         gameView = Instantiate(gameViewPrefab);

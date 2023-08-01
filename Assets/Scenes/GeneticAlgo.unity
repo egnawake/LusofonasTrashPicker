@@ -244,6 +244,7 @@ MonoBehaviour:
   gridColumns: 10
   maxTurns: 200
   trashProbability: 0.5
+  scoreConfigSO: {fileID: 11400000, guid: 72a6c08db7577fc4dadeecdb211585d2, type: 2}
 --- !u!4 &1473571438
 Transform:
   m_ObjectHideFlags: 0

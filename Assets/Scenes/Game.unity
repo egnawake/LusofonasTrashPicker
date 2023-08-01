@@ -621,6 +621,7 @@ MonoBehaviour:
   maxTurns: 20
   trashSpawnChance: 0.5
   strategyPath: ga_2023-07-21_20-51
+  scoreConfigSO: {fileID: 11400000, guid: 72a6c08db7577fc4dadeecdb211585d2, type: 2}
   gameViewPrefab: {fileID: 5500236453499216363, guid: fde656d382de3284b9ce512440b4a262, type: 3}
   mainMenuControllerPrefab: {fileID: 506143749}
   gameOverScreen: {fileID: 39528484}

@@ -16,6 +16,7 @@ public class GAController : MonoBehaviour
     [SerializeField] private int gridColumns = 10;
     [SerializeField] private int maxTurns = 200;
     [SerializeField] private float trashProbability = 0.2f;
+    [SerializeField] private ScoreConfigSO scoreConfigSO;
 
     // Total number of game situations
     private readonly int geneNumber = 243;
@@ -27,7 +28,7 @@ public class GAController : MonoBehaviour
         IList<string> evolutionLog = new List<string>();
 
         TrashPickerRunner runner = new TrashPickerRunner(gameRuns, gridRows,
-            gridColumns, maxTurns, trashProbability);
+            gridColumns, maxTurns, trashProbability, scoreConfigSO.ToScoreConfig());
 
         GeneticAlgorithm<RobotAction> ga = new GeneticAlgorithm<RobotAction>(
             populationSize, generations,

@@ -13,6 +13,7 @@ public class TrashPickerGame
     private Position robotPosition = new Position(0, 0);
     private int turn = 0;
     private int score = 0;
+    private ScoreConfig scoreConfig;
 
     /// <summary>
     /// Number of rows in the grid.
@@ -83,7 +84,7 @@ public class TrashPickerGame
     /// Probability that a cell will have trash on it when the map is created.
     /// </param>
     public TrashPickerGame(int rows, int cols, int maxTurns,
-        double trashSpawnChance)
+        double trashSpawnChance, ScoreConfig scoreConfig)
     {
         rng = new Random();
 
@@ -102,6 +103,7 @@ public class TrashPickerGame
         TargetPosition = robotPosition;
 
         this.maxTurns = maxTurns;
+        this.scoreConfig = scoreConfig;
     }
 
     /// <summary>
@@ -157,6 +159,8 @@ public class TrashPickerGame
         TargetPosition = pos;
         robotPosition = TargetPosition;
 
+        score += scoreConfig.Moved;
+
         return true;
     }
 
@@ -169,6 +173,8 @@ public class TrashPickerGame
             return;
 
         turn++;
+
+        score += scoreConfig.SkippedTurn;
     }
 
     /// <summary>
@@ -188,14 +194,14 @@ public class TrashPickerGame
         // If there isn't a cell at the robot's position, fail the action
         if (grid[robotPosition.Row, robotPosition.Col] != InternalCellState.Trash)
         {
-            score -= 1;
+            score += scoreConfig.FailedToCollectTrash;
             return false;
         }
 
         // Remove trash from cell if trash is picked up
         SetCell(robotPosition, InternalCellState.Empty);
 
-        score += 10;
+        score += scoreConfig.CollectedTrash;
 
         return true;
     }
