@@ -25,6 +25,9 @@ public struct Position
     public static Position operator +(Position a, Position b) =>
         new Position(a.Row + b.Row, a.Col + b.Col);
 
+    public static Position operator -(Position a, Position b) =>
+        new Position(a.Row - b.Row, a.Col - b.Col);
+
     public static bool operator ==(Position a, Position b) =>
         a.Row == b.Row && a.Col == b.Col;
 

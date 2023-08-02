@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSpacing: 1.2
   robotMoveDuration: 0.35
+  robotWrapDuration: 0.5
   robotMoveCurve:
     serializedVersion: 2
     m_Curve:

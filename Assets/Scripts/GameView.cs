@@ -16,6 +16,10 @@ public class GameView : MonoBehaviour
     private float robotMoveDuration = 0.5f;
 
     [SerializeField]
+    [Tooltip("Time the robot takes wrapping around the grid.")]
+    private float robotWrapDuration = 1f;
+
+    [SerializeField]
     [Tooltip("Animation curve for robot movement.")]
     private AnimationCurve robotMoveCurve;
 
@@ -178,10 +182,22 @@ public class GameView : MonoBehaviour
             // to new position
             if (success)
             {
-                robot.transform.rotation = Quaternion.LookRotation(
-                    end - start);
-                StartCoroutine(AnimateRobotMovement(start, end, robotMoveCurve,
-                    robotMoveDuration));
+                Position diff = targetPosition - lastPosition;
+                bool wrapped = Mathf.Abs(diff.Row) > 1 || Mathf.Abs(diff.Col) > 1;
+
+                if (wrapped)
+                {
+                    robot.transform.rotation = Quaternion.LookRotation(start - end);
+                    StartCoroutine(AnimateRobotWrap(start, end, robotMoveCurve,
+                        robotWrapDuration));
+                }
+                else
+                {
+                    robot.transform.rotation = Quaternion.LookRotation(
+                        end - start);
+                    StartCoroutine(AnimateRobotMovement(start, end, robotMoveCurve,
+                        robotMoveDuration));
+                }
             }
             // If movement was not successful, animate robot bumping into a wall
             else
@@ -234,6 +250,21 @@ public class GameView : MonoBehaviour
             -(rowLength - 0.2f) / 2, 0, (colLength - 0.2f) / 2);
 
         return transform.TransformPoint(position + offset);
+    }
+
+    private IEnumerator AnimateRobotWrap(Vector3 start, Vector3 end,
+        AnimationCurve curve, float duration)
+    {
+        Vector3 exitStart = start;
+
+        Vector3 offset = (end - start).normalized * 1.2f;
+        Vector3 exitEnd = start - offset;
+
+        Vector3 enterEnd = end;
+        Vector3 enterStart = end + offset;
+
+        yield return AnimateRobotMovement(exitStart, exitEnd, curve, duration / 2);
+        yield return AnimateRobotMovement(enterStart, enterEnd, curve, duration / 2);
     }
 
     private IEnumerator AnimateRobotMovement(Vector3 start, Vector3 end,
