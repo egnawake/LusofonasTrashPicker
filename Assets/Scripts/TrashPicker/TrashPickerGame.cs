@@ -125,6 +125,11 @@ public class TrashPickerGame
     /// </returns>
     public CellState CellAt(Position pos)
     {
+        if (!IsCellVisible(pos))
+        {
+            return CellState.Hidden;
+        }
+
         pos = WrapPosition(pos);
         return (CellState)grid[pos.Row, pos.Col];
     }
