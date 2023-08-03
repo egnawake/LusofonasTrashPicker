@@ -50,6 +50,7 @@ public class GameView : MonoBehaviour
     [SerializeField] private CellView cellPrefab;
     [SerializeField] private GameObject robotPrefab;
     [SerializeField] private GameObject trashPickupEffectPrefab;
+    [SerializeField] private GameObject portalPrefab;
 
 
     private CellView[,] cellObjects;
@@ -81,6 +82,7 @@ public class GameView : MonoBehaviour
 
         this.game = game;
         InitializeCellGrid();
+        DrawPortals();
         InitializeRobot();
         hud = GetComponentInChildren<HUD>();
 
@@ -133,6 +135,27 @@ public class GameView : MonoBehaviour
 
                 cellObjects[i, j] = cellObject;
             }
+        }
+    }
+
+    private void DrawPortals()
+    {
+        for (int i = 0; i < game.Rows; i++)
+        {
+            GameObject portal = Instantiate(portalPrefab, transform);
+            portal.transform.position = CellToWorldPosition(new Position(i, -1));
+
+            portal = Instantiate(portalPrefab, transform);
+            portal.transform.position = CellToWorldPosition(new Position(i, game.Cols));
+        }
+
+        for (int i = 0; i < game.Cols; i++)
+        {
+            GameObject portal = Instantiate(portalPrefab, transform);
+            portal.transform.position = CellToWorldPosition(new Position(-1, i));
+
+            portal = Instantiate(portalPrefab, transform);
+            portal.transform.position = CellToWorldPosition(new Position(game.Rows, i));
         }
     }
 

@@ -273,6 +273,7 @@ MonoBehaviour:
   cellPrefab: {fileID: 8331667419815577991, guid: 33de107dfcce4844ca7502c922ffc0ac, type: 3}
   robotPrefab: {fileID: 8331126558588716320, guid: d067675213b13af4cbc050ede83d07d1, type: 3}
   trashPickupEffectPrefab: {fileID: 421206028904305758, guid: ab1e2b2fdbfd9b4448e68d28ecb8b4a7, type: 3}
+  portalPrefab: {fileID: 4499732210220021863, guid: b3fd822904f6e4a4d805c4d29bd1d3b9, type: 3}
 --- !u!1 &7160211135044014502
 GameObject:
   m_ObjectHideFlags: 0
