@@ -62,7 +62,6 @@ public class GameController : MonoBehaviour
 
     private List<HighScore> highScores;
 
-    private bool isAI = false;
     private bool aiPaused = false;
     private string playerType = "human";
     private NaiveBayesClassifier nbClassifier;
@@ -139,7 +138,7 @@ public class GameController : MonoBehaviour
             .ToArray();
     }
 
-    private void PlayerAction()
+    private void PlayerAction(bool draw = true)
     {
         RobotAction action = RobotAction.None;
 
@@ -184,11 +183,11 @@ public class GameController : MonoBehaviour
                 { westCell, game.CellAt(game.RobotPosition + new Position(0, -1)).ToString() }
             });
 
-            DoAction(action);
+            DoAction(action, draw);
         }
     }
 
-    private void AIAction()
+    private void AIAction(bool draw = true)
     {
         RobotAction action = RobotAction.None;
 
@@ -213,11 +212,7 @@ public class GameController : MonoBehaviour
         // Convert prediction to RobotAction
         Enum.TryParse<RobotAction>(prediction, out action);
 
-        DoAction(action);
-
-        // Pause the AI
-        aiPaused = true;
-        StartCoroutine(AIPauseTimer());
+        DoAction(action, draw);
     }
 
     private void GAAction()
@@ -238,12 +233,9 @@ public class GameController : MonoBehaviour
         Debug.Log($"Action at {actionIndex} - {action} - {string.Join(' ', states)}");
 
         DoAction(action);
-
-        aiPaused = true;
-        StartCoroutine(AIPauseTimer());
     }
 
-    private void DoAction(RobotAction action)
+    private void DoAction(RobotAction action, bool draw = true)
     {
         Position lastPosition = game.RobotPosition;
         bool actionSuccess = false;
@@ -279,9 +271,12 @@ public class GameController : MonoBehaviour
             actionSuccess = game.CollectTrash();
         }
 
-        gameView.Draw(action, actionSuccess, lastPosition, game.TargetPosition);
+        if (draw)
+        {
+            gameView.Draw(action, actionSuccess, lastPosition, game.TargetPosition);
+            if (game.GameOver) HandleGameOver();
+        }
 
-        if (game.GameOver) HandleGameOver();
     }
 
     private void StartHumanGame()
@@ -322,6 +317,21 @@ public class GameController : MonoBehaviour
 
         // Start the coroutine that processes input and updates the game
         StartCoroutine(PlayGame());
+    }
+
+    private void PlayQuickBayesGame()
+    {
+        game = new TrashPickerGame(gridRows, gridColumns, trashSpawnChance,
+            scoreConfigSO.ToScoreConfig());
+
+        this.playerType = "bayes";
+
+        while (!game.GameOver)
+        {
+            AIAction(false);
+        }
+
+        sessionLogger.Log(playerType, game);
     }
 
     private void HandleGameOver()
@@ -415,10 +425,16 @@ public class GameController : MonoBehaviour
                 else if (!aiPaused && playerType == "bayes")
                 {
                     AIAction();
+
+                    aiPaused = true;
+                    StartCoroutine(AIPauseTimer());
                 }
                 else if (!aiPaused && playerType == "genetic")
                 {
                     GAAction();
+
+                    aiPaused = true;
+                    StartCoroutine(AIPauseTimer());
                 }
             }
 
@@ -426,6 +442,11 @@ public class GameController : MonoBehaviour
         }
 
         sessionLogger.Log(playerType, game);
+
+        if (playerType == "human")
+        {
+            PlayQuickBayesGame();
+        }
     }
 
     private IEnumerator AIPauseTimer()
