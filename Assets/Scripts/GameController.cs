@@ -258,9 +258,7 @@ public class GameController : MonoBehaviour
         }
         else if (action == RobotAction.MoveRandom)
         {
-            Direction dir = (Direction)UnityEngine.Random.Range(0,
-                Enum.GetNames(typeof(Direction)).Length);
-            actionSuccess = game.MoveRobot(dir);
+            actionSuccess = game.MoveRandom();
         }
         else if (action == RobotAction.SkipTurn)
         {

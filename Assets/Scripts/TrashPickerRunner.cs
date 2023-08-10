@@ -64,8 +64,7 @@ public class TrashPickerRunner
             }
             else if (strategy.Genes[action] == RobotAction.MoveRandom)
             {
-                Direction d = (Direction)rng.Next(Enum.GetNames(typeof(Direction)).Length);
-                game.MoveRobot(d);
+                game.MoveRandom();
             }
             else if (strategy.Genes[action] == RobotAction.SkipTurn)
             {

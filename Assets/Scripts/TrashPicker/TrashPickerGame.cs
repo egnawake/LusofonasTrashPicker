@@ -175,6 +175,13 @@ public class TrashPickerGame
         return true;
     }
 
+    public bool MoveRandom()
+    {
+        Direction dir = (Direction)UnityEngine.Random.Range(0,
+            Enum.GetNames(typeof(Direction)).Length);
+        return MoveRobot(dir);
+    }
+
     /// <summary>
     /// Skips the current turn.
     /// </summary>
