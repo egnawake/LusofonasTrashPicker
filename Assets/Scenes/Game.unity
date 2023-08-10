@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c228df6857f45c146881f20d99a8cfe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuPrefab: {fileID: 666587009258189572, guid: 0488ed6206ef93948809842dd94de823, type: 3}
+  mainMenuPrefab: {fileID: 5105075233024675324, guid: e9ce15c7dff9c124ba2cccec8e188dc6, type: 3}
   highScoresPrefab: {fileID: 8997355287504549550, guid: 59b6014f32b84f248bd47bd3b9df8716, type: 3}
 --- !u!1001 &561680344
 PrefabInstance:
