@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c9e589454a4c7148b9ec99f2eee53b7, type: 3}
   m_Name: ScoreConfig
   m_EditorClassIdentifier: 
-  <Moved>k__BackingField: -1
-  <SkippedTurn>k__BackingField: -2
-  <CollectedTrash>k__BackingField: 10
-  <FailedToCollectTrash>k__BackingField: -5
+  <Moved>k__BackingField: -2
+  <MovedRandom>k__BackingField: -1
+  <SkippedTurn>k__BackingField: 0
+  <CollectedTrash>k__BackingField: 20
+  <FailedToCollectTrash>k__BackingField: -10

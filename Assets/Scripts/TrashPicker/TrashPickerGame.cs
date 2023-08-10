@@ -147,39 +147,36 @@ public class TrashPickerGame
     /// </returns>
     public bool MoveRobot(Direction dir)
     {
-        if (GameOver)
-            return false;
+        bool success = MoveRobotAux(dir);
 
-        turn++;
-
-        MovementDirection = dir;
-
-        // Convert direction to target position
-        Position pos = robotPosition + dir switch
+        if (success)
         {
-            Direction.North => new Position(-1, 0),
-            Direction.East => new Position(0, 1),
-            Direction.South => new Position(1, 0),
-            Direction.West => new Position(0, -1),
-            _ => throw new ArgumentException("Invalid direction")
-        };
+            score += scoreConfig.Moved;
+        }
 
-        // If robot would hit a wall, wrap around position
-        pos = WrapPosition(pos);
-
-        TargetPosition = pos;
-        robotPosition = TargetPosition;
-
-        score += scoreConfig.Moved;
-
-        return true;
+        return success;
     }
 
+    /// <summary>
+    /// Tries to perform a move action towards a random direction.
+    /// </summary>
+    ///
+    /// <returns>
+    /// A boolean indicating whether movement was successful.
+    /// </returns>
     public bool MoveRandom()
     {
         Direction dir = (Direction)UnityEngine.Random.Range(0,
             Enum.GetNames(typeof(Direction)).Length);
-        return MoveRobot(dir);
+
+        bool success = MoveRobotAux(dir);
+
+        if (success)
+        {
+            score += scoreConfig.MovedRandom;
+        }
+
+        return success;
     }
 
     /// <summary>
@@ -228,6 +225,34 @@ public class TrashPickerGame
     {
         // p=L^2-(L/2)^2
         return rows * rows - ((rows / 2) * (rows / 2));
+    }
+
+    private bool MoveRobotAux(Direction dir)
+    {
+        if (GameOver)
+            return false;
+
+        turn++;
+
+        MovementDirection = dir;
+
+        // Convert direction to target position
+        Position pos = robotPosition + dir switch
+        {
+            Direction.North => new Position(-1, 0),
+            Direction.East => new Position(0, 1),
+            Direction.South => new Position(1, 0),
+            Direction.West => new Position(0, -1),
+            _ => throw new ArgumentException("Invalid direction")
+        };
+
+        // If robot would hit a wall, wrap around position
+        pos = WrapPosition(pos);
+
+        TargetPosition = pos;
+        robotPosition = TargetPosition;
+
+        return true;
     }
 
     private void SetCell(Position pos, InternalCellState state)

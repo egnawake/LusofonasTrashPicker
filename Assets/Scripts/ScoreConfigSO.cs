@@ -4,6 +4,7 @@ using UnityEngine;
 public class ScoreConfigSO : ScriptableObject
 {
     [field: SerializeField] public int Moved { get; private set; }
+    [field: SerializeField] public int MovedRandom { get; private set; }
     [field: SerializeField] public int SkippedTurn { get; private set; }
     [field: SerializeField] public int CollectedTrash { get; private set; }
     [field: SerializeField] public int FailedToCollectTrash { get; private set; }
@@ -13,6 +14,7 @@ public class ScoreConfigSO : ScriptableObject
         return new ScoreConfig
         {
             Moved = this.Moved,
+            MovedRandom = this.MovedRandom,
             SkippedTurn = this.SkippedTurn,
             CollectedTrash = this.CollectedTrash,
             FailedToCollectTrash = this.FailedToCollectTrash
