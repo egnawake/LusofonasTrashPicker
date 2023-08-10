@@ -130,10 +130,14 @@ public class GameController : MonoBehaviour
 
     private void InitializeGAPlayer()
     {
-        string s = File.ReadAllText(
-            Path.Combine(Application.persistentDataPath, strategyPath, "strategy.txt"));
+        string strategyFilePath = Path.Combine(Application.persistentDataPath,
+            strategyPath, "strategy.txt");
 
-        strategy = s.Split(',')
+        if (!File.Exists(strategyFilePath)) return;
+
+        string strategyText = File.ReadAllText(strategyFilePath);
+
+        strategy = strategyText.Split(',')
             .Select((string s) => (RobotAction)Enum.Parse(typeof(RobotAction), s))
             .ToArray();
     }
