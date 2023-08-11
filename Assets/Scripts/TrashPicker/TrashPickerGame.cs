@@ -125,12 +125,13 @@ public class TrashPickerGame
     /// </returns>
     public CellState CellAt(Position pos)
     {
+        pos = WrapPosition(pos);
+
         if (!IsCellVisible(pos))
         {
             return CellState.Hidden;
         }
 
-        pos = WrapPosition(pos);
         return (CellState)grid[pos.Row, pos.Col];
     }
 
@@ -295,10 +296,10 @@ public class TrashPickerGame
         IList<Position> neighborhood = new List<Position>
         {
             robotPosition,
-            robotPosition + new Position(-1, 0),
-            robotPosition + new Position(0, 1),
-            robotPosition + new Position(1, 0),
-            robotPosition + new Position(0, -1)
+            WrapPosition(robotPosition + new Position(-1, 0)),
+            WrapPosition(robotPosition + new Position(0, 1)),
+            WrapPosition(robotPosition + new Position(1, 0)),
+            WrapPosition(robotPosition + new Position(0, -1))
         };
 
         foreach (Position p in neighborhood)
