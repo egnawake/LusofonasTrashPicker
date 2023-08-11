@@ -59,6 +59,7 @@ public class GameController : MonoBehaviour
     private TrashPickerGame game;
     private MainMenuController mainMenuController;
     private GameView gameView;
+    private PlayerInput playerInput;
 
     private List<HighScore> highScores;
 
@@ -81,6 +82,8 @@ public class GameController : MonoBehaviour
         {
             cameraMovement.enabled = false;
         }
+
+        playerInput = GetComponent<PlayerInput>();
 
         highScores = new List<HighScore>();
 
@@ -144,36 +147,7 @@ public class GameController : MonoBehaviour
 
     private void PlayerAction(bool draw = true)
     {
-        RobotAction action = RobotAction.None;
-
-        if (Input.GetButtonDown("Skip Turn"))
-        {
-            action = RobotAction.SkipTurn;
-        }
-        else if (Input.GetButtonDown("Collect"))
-        {
-            action = RobotAction.CollectTrash;
-        }
-        else if (Input.GetButtonDown("Up") || Input.GetButtonDown("Up Numpad"))
-        {
-            action = RobotAction.MoveNorth;
-        }
-        else if (Input.GetButtonDown("Right") || Input.GetButtonDown("Right Numpad"))
-        {
-            action = RobotAction.MoveEast;
-        }
-        else if (Input.GetButtonDown("Down") || Input.GetButtonDown("Down Numpad"))
-        {
-            action = RobotAction.MoveSouth;
-        }
-        else if (Input.GetButtonDown("Left") || Input.GetButtonDown("Left Numpad"))
-        {
-            action = RobotAction.MoveWest;
-        }
-        else if (Input.GetButtonDown("Move Random"))
-        {
-            action = RobotAction.MoveRandom;
-        }
+        RobotAction action = playerInput.Action;
 
         // If there was player input, add new data to the NBC and do the action
         if (action != RobotAction.None)
