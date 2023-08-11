@@ -154,19 +154,19 @@ public class GameController : MonoBehaviour
         {
             action = RobotAction.CollectTrash;
         }
-        else if (Input.GetButtonDown("Up"))
+        else if (Input.GetButtonDown("Up") || Input.GetButtonDown("Up Numpad"))
         {
             action = RobotAction.MoveNorth;
         }
-        else if (Input.GetButtonDown("Right"))
+        else if (Input.GetButtonDown("Right") || Input.GetButtonDown("Right Numpad"))
         {
             action = RobotAction.MoveEast;
         }
-        else if (Input.GetButtonDown("Down"))
+        else if (Input.GetButtonDown("Down") || Input.GetButtonDown("Down Numpad"))
         {
             action = RobotAction.MoveSouth;
         }
-        else if (Input.GetButtonDown("Left"))
+        else if (Input.GetButtonDown("Left") || Input.GetButtonDown("Left Numpad"))
         {
             action = RobotAction.MoveWest;
         }
