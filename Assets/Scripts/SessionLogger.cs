@@ -20,7 +20,9 @@ public class SessionLogger
         string fileName = String.Format("{0}-{1}x{2}-{3}.csv",
             formattedDate, game.Rows, game.Cols, game.MaxTurns);
 
-        string path = Path.Combine(Application.persistentDataPath, fileName);
+        string dir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+        string path = Path.Combine(dir, fileName);
 
         File.AppendAllText(path, $"{playerType},{game.Score}\n");
     }
