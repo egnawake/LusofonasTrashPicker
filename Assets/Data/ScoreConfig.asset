@@ -15,5 +15,5 @@ MonoBehaviour:
   <Moved>k__BackingField: -2
   <MovedRandom>k__BackingField: -1
   <SkippedTurn>k__BackingField: 0
-  <CollectedTrash>k__BackingField: 20
-  <FailedToCollectTrash>k__BackingField: -10
+  <CollectedTrash>k__BackingField: 10
+  <FailedToCollectTrash>k__BackingField: -5
