@@ -45,7 +45,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject gameOverHighScoreDisplay;
     [SerializeField] private TMP_Text gameOverScoreText;
     [SerializeField] private TMP_Text gameOverHighScoreText;
-    [SerializeField] private Button gameOverReturnButton;
+    [SerializeField] private Button gameOverContinueButton;
 
     // Camera animation fields
     [SerializeField] private float cameraSlideDuration = 1f;
@@ -271,6 +271,14 @@ public class GameController : MonoBehaviour
 
     private void StartGame(string playerType)
     {
+        gameOverScreen.SetActive(false);
+
+        // Destroy existing view
+        if (gameView != null)
+        {
+            Destroy(gameView.gameObject);
+        }
+
         // Initialize game with parameters from the Unity inspector
         game = new TrashPickerGame(gridRows, gridColumns, trashSpawnChance,
             scoreConfigSO.ToScoreConfig());
@@ -388,7 +396,7 @@ public class GameController : MonoBehaviour
 
     private void AttachButtonListeners()
     {
-        gameOverReturnButton.onClick.AddListener(OpenMainMenu);
+        gameOverContinueButton.onClick.AddListener(StartHumanGame);
     }
 
     private IEnumerator PlayGame()
