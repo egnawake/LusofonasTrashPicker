@@ -53,6 +53,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private Transform cameraSlideInStart;
     [SerializeField] private Transform cameraSlideInEnd;
 
+    [SerializeField] private TMP_Text sessionIdText;
+
 
     private Camera mainCamera;
     private CameraMovement cameraMovement;
@@ -61,6 +63,7 @@ public class GameController : MonoBehaviour
     private GameView gameView;
     private PlayerInput playerInput;
     private bool backgroundGame = false;
+    private string sessionId;
 
     private List<HighScore> highScores;
 
@@ -91,6 +94,9 @@ public class GameController : MonoBehaviour
         InitializeAI();
 
         InitializeGAPlayer();
+
+        sessionId = Guid.NewGuid().ToString().Substring(0, 6);
+        sessionIdText.text = sessionId;
 
         sessionLogger = new SessionLogger();
 
