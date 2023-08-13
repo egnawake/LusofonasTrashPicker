@@ -98,7 +98,7 @@ public class GameController : MonoBehaviour
         sessionId = Guid.NewGuid().ToString().Substring(0, 6);
         sessionIdText.text = sessionId;
 
-        sessionLogger = new SessionLogger();
+        sessionLogger = new SessionLogger(sessionId);
 
         mainMenuController = GetComponent<MainMenuController>();
         mainMenuController.GameStarted += StartGame;
