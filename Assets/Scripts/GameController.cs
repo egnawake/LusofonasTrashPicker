@@ -54,6 +54,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Transform cameraSlideInEnd;
 
     [SerializeField] private TMP_Text sessionIdText;
+    [SerializeField] private TMP_Text gamesPlayedText;
 
 
     private Camera mainCamera;
@@ -64,6 +65,7 @@ public class GameController : MonoBehaviour
     private PlayerInput playerInput;
     private bool backgroundGame = false;
     private string sessionId;
+    private int gamesPlayed;
 
     private List<HighScore> highScores;
 
@@ -96,7 +98,10 @@ public class GameController : MonoBehaviour
         InitializeGAPlayer();
 
         sessionId = Guid.NewGuid().ToString().Substring(0, 6);
-        sessionIdText.text = sessionId;
+        sessionIdText.text = $"Session ID: {sessionId}";
+
+        gamesPlayed = 0;
+        gamesPlayedText.text = $"Games played: {gamesPlayed}";
 
         sessionLogger = new SessionLogger(sessionId);
 
@@ -441,6 +446,8 @@ public class GameController : MonoBehaviour
         }
 
         sessionLogger.Log(playerType, game);
+        gamesPlayed++;
+        gamesPlayedText.text = $"Games played: {gamesPlayed}";
 
         if (playerType == "human")
         {
