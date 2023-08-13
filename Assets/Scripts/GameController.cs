@@ -60,6 +60,7 @@ public class GameController : MonoBehaviour
     private MainMenuController mainMenuController;
     private GameView gameView;
     private PlayerInput playerInput;
+    private bool backgroundGame = false;
 
     private List<HighScore> highScores;
 
@@ -145,7 +146,7 @@ public class GameController : MonoBehaviour
             .ToArray();
     }
 
-    private void PlayerAction(bool draw = true)
+    private void PlayerAction()
     {
         RobotAction action = playerInput.Action;
 
@@ -161,11 +162,11 @@ public class GameController : MonoBehaviour
                 { westCell, game.CellAt(game.RobotPosition + new Position(0, -1)).ToString() }
             });
 
-            DoAction(action, draw);
+            DoAction(action);
         }
     }
 
-    private void AIAction(bool draw = true)
+    private void AIAction()
     {
         RobotAction action = RobotAction.None;
 
@@ -190,7 +191,7 @@ public class GameController : MonoBehaviour
         // Convert prediction to RobotAction
         Enum.TryParse<RobotAction>(prediction, out action);
 
-        DoAction(action, draw);
+        DoAction(action);
     }
 
     private void GAAction()
@@ -213,7 +214,7 @@ public class GameController : MonoBehaviour
         DoAction(action);
     }
 
-    private void DoAction(RobotAction action, bool draw = true)
+    private void DoAction(RobotAction action)
     {
         Position lastPosition = game.RobotPosition;
         bool actionSuccess = false;
@@ -247,12 +248,10 @@ public class GameController : MonoBehaviour
             actionSuccess = game.CollectTrash();
         }
 
-        if (draw)
+        if (!backgroundGame)
         {
             gameView.Draw(action, actionSuccess, lastPosition, game.TargetPosition);
-            if (game.GameOver) HandleGameOver();
         }
-
     }
 
     private void StartHumanGame()
@@ -302,10 +301,14 @@ public class GameController : MonoBehaviour
 
         this.playerType = "bayes";
 
+        this.backgroundGame = true;
+
         while (!game.GameOver)
         {
-            AIAction(false);
+            AIAction();
         }
+
+        this.backgroundGame = false;
 
         sessionLogger.Log(playerType, game);
     }
@@ -390,10 +393,16 @@ public class GameController : MonoBehaviour
 
     private IEnumerator PlayGame()
     {
-        while (!game.GameOver)
+        while (true)
         {
             if (!gameView.Animating)
             {
+                if (game.GameOver)
+                {
+                    HandleGameOver();
+                    break;
+                }
+
                 if (playerType == "human")
                 {
                     PlayerAction();
